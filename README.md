@@ -12,8 +12,8 @@ Include environment info such as packages used, and keys and ids.
 
         VLB_TOKEN_METADATA
 
-        VLB_TOKEN_COVER
-``
+        VLB_TOKEN_COVER``
+
 
 ## Tests
 
