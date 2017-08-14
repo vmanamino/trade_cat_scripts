@@ -18,9 +18,9 @@ Include environment info such as packages used, and keys and ids.
 
         VLB_TOKEN_COVER``
 
-``The VLB response relies partly on ONIX fields.  For example, in the Detailaufruf ISBN,
+	``The VLB response relies partly on ONIX fields.  For example, in the Detailaufruf ISBN,
 
- availabiltyStatusCode refers to ONIX field j141, and the corresponding code list 51.``
+ 	availabiltyStatusCode refers to ONIX field j141, and the corresponding code list 51.``
 
 
 
