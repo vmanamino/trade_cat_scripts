@@ -6,9 +6,9 @@ Collection of modules and scripts to automate tasks.
 
 Include environment info such as packages used, and keys and ids.
 
-``VLB Tokens``
+###VLB Tokens
 
-        ``VLB_TOKEN_MMO
+        VLB_TOKEN_MMO
 
         VLB_TOKEN_METADATA
 
@@ -16,11 +16,13 @@ Include environment info such as packages used, and keys and ids.
 
         	http://api.vlb.de/api/v1/product/9783476043306/isbn13
 
-        VLB_TOKEN_COVER``
+        VLB_TOKEN_COVER
 
-	``The VLB response relies partly on ONIX fields.  For example, in the Detailaufruf ISBN,
 
- 	availabiltyStatusCode refers to ONIX field j141, and the corresponding code list 51.``
+
+The VLB response relies partly on ONIX fields.  For example, in the Detailaufruf ISBN,
+
+ availabiltyStatusCode refers to ONIX field j141, and the corresponding code list 51.
 
 
 
