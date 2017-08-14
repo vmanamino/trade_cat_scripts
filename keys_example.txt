@@ -1,0 +1,6 @@
+import os
+
+# VLB tokens
+os.environ['VLB_TOKEN_MMO'] = ''
+os.environ['VLB_TOKEN_METADATA'] = ''
+os.environ['VLB_TOKEN_COVER'] = ''
