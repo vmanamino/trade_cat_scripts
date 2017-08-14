@@ -9,4 +9,7 @@ get contributors fullname for each contributor
 get prices country, territory, currency, validFrom, value for each price
 get mediaFiles count of list
 '''
+import sys
+sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
+import library
 

@@ -1,1 +1,3 @@
 import library
+
+class Record()
