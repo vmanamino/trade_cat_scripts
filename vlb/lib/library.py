@@ -30,7 +30,7 @@ def get_request(url):
     	print(err)
 	
 
-print(get_isbn(9783476043306)['id'])
-# get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
+# print(get_isbn(9783476043306)['id'])
+# # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 
 
