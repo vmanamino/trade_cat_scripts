@@ -24,6 +24,8 @@ The VLB response relies partly on ONIX fields.  For example, in the Detailaufruf
 
  availabiltyStatusCode refers to ONIX field j141, and the corresponding code list 51.
 
+ See VLB API Documentation!!!
+
 
 
 ## Tests
