@@ -6,7 +6,7 @@ Collection of modules and scripts to automate tasks.
 
 Include environment info such as packages used, and keys and ids.
 
--VLB Tokens
+`VLB Tokens`
 
 ## Tests
 
