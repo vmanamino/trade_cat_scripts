@@ -4,6 +4,7 @@ import sys
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
 import urllib.request
+import pickle
 
 metadata_token = os.environ['VLB_TOKEN_METADATA']
 
@@ -41,10 +42,11 @@ def response_dict(response):
 		data_dict['code'] = response.code		
 	else:
 		data_dict['code'] = response.code		
-		
-	# test data
-	# with open('vlb_response_dict.txt', 'w') as dict_dump:
-	# 	dict_dump.write(str(data_dict))	
+
+	# test data	
+	# with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_test_pickle.txt', 'wb') as test_pickle:
+	# 	pickle.dump(data_dict, test_pickle)
+
 	return data_dict
 
 

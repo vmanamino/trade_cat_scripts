@@ -9,8 +9,7 @@ class Product():
 		try:
 			if self.response_code == 200:
 				product = data['content']
-				self.id = product['id']		
-				# print(len(product['identifiers']))	
+				self.id = product['id']				
 				if (len(product['titles']) == 1):
 					title = product['titles'][0]
 					self.title = title['title']
