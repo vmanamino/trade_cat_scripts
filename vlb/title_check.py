@@ -11,5 +11,12 @@ get mediaFiles count of list
 '''
 import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
-import library
+from product import Product
+from library import get_product
+
+data = get_product('9783476043306')
+book = Product(data)
+print(book.title)
+print(book.isbn)
+
 

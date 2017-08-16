@@ -7,14 +7,14 @@ import urllib.request
 
 metadata_token = os.environ['VLB_TOKEN_METADATA']
 
-def get_isbn(isbn):
+def get_product(isbn):
 
 	url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'
 	return response_dict(get_request(url))	
 
 def add_headers(request):
 	
-	request.add_header('Authorization', 'Bearer ')#+metadata_token)
+	request.add_header('Authorization', 'Bearer '+metadata_token)
 	request.add_header('Content-Type', 'application/json')
 	request.add_header('Accept', 'application/json')
 	return request
@@ -30,17 +30,25 @@ def get_request(url):
 def response_dict(response):
 	data_dict = {}
 	data = json.loads(response.read())
+
+	# want to create test data	
+	# with open('vlb_json_test.json', 'w') as json_dump:
+	# 	json_dump.write(str(data))
+
 	data_dict['content'] = data
 
 	if response.code == 200:
 		data_dict['code'] = response.code		
 	else:
 		data_dict['code'] = response.code		
-
+		
+	# test data
+	# with open('vlb_response_dict.txt', 'w') as dict_dump:
+	# 	dict_dump.write(str(data_dict))	
 	return data_dict
 
 
-print(get_isbn(9783476043306))
+# print(get_product(9783476043306))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 
 
