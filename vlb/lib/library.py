@@ -51,6 +51,7 @@ def response_dict(response):
 
 
 # print(get_product(9783476043306))
+# print(get_product(9781430261063))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 
 
