@@ -15,7 +15,9 @@ class productDataTests(unittest.TestCase):
 
 	def test_properties(self):
 		self.assertTrue(product.title == 'Sparta Verfassungs- und Sozialgeschichte einer griechischen Polis')
-
+		self.assertTrue(product.availability == 'MD')
+		# product isbn matches the isbn provided to the api
+		self.assertTrue(product.isbn == '9783476043306')
 
 def main():
     unittest.main()
