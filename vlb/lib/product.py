@@ -25,7 +25,10 @@ class Product():
 						break	
 					else:
 						self.isbn = 'not found'
-				self.prices = len(product['prices'])
+				if len(product['prices']):
+					self.prices = len(product['prices'])
+				else:
+					self.prices = 'None'
 				self.price_DE = dach_prices(product['prices'])
 				
 
@@ -37,4 +40,6 @@ class Product():
 			self.title = repr(self.response_code) + ' '+product['error']
 			self.isbn = repr(self.response_code) + ' '+product['error']
 			self.availability = repr(self.response_code) + ' '+product['error']
+			self.prices = repr(self.response_code) + ' '+product['error']
+			self.price_DE = repr(self.response_code) + ' '+product['error']
 

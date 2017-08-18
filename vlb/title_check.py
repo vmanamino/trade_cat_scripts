@@ -12,7 +12,7 @@ get mediaFiles count of list
 import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
 from product import Product
-from library import get_product
+from library import get_product, get_sheetdata
 from openpyxl import Workbook
 import time
 
@@ -26,7 +26,7 @@ startTime = time.time()
 # print(book.availability)
 # print(book.prices)
 
-isbns = ['9781430261063', '9781484209264', '9781484211922', '9781484213933']
+# isbns = ['9781430261063', '9781484209264', '9781484211922', '9781484213933']
 
 buk = Workbook()
 
@@ -45,11 +45,16 @@ outsheet.cell(row=n_row_full, column=6, value="VLB Availability")
 outsheet.cell(row=n_row_full, column=7, value="# of Prices")
 outsheet.cell(row=n_row_full, column=8, value="Price DE")
 
+data = get_sheetdata('dataset2017.xlsx')
 
-for isbn in isbns:
+count = data.max_row
+
+for n in range(2, 1000):
+	print(n)
+	isbn = data.cell(row=n, column=1).value
 	n_row_full += 1
-	data = get_product(isbn)
-	book = Product(data)
+	product_data = get_product(isbn)
+	book = Product(product_data)
 
 	if isbn == book.isbn:
 		match = True
@@ -57,6 +62,7 @@ for isbn in isbns:
 		match = False		
 
 	outsheet.cell(row=n_row_full, column=1, value=isbn)
+	outsheet.cell(row=n_row_full, column=2, value=data.cell(row=n, column=2).value)
 	outsheet.cell(row=n_row_full, column=3, value=book.isbn)
 	outsheet.cell(row=n_row_full, column=4, value=book.title)
 	outsheet.cell(row=n_row_full, column=5, value=match)
@@ -64,8 +70,26 @@ for isbn in isbns:
 	outsheet.cell(row=n_row_full, column=7, value=book.prices)
 	outsheet.cell(row=n_row_full, column=8, value=book.price_DE)
 
+# for isbn in isbns:
+# 	n_row_full += 1
+# 	data = get_product(isbn)
+# 	book = Product(data)
+
+# 	if isbn == book.isbn:
+# 		match = True
+# 	else:
+# 		match = False		
+
+# 	outsheet.cell(row=n_row_full, column=1, value=isbn)
+# 	outsheet.cell(row=n_row_full, column=3, value=book.isbn)
+# 	outsheet.cell(row=n_row_full, column=4, value=book.title)
+# 	outsheet.cell(row=n_row_full, column=5, value=match)
+# 	outsheet.cell(row=n_row_full, column=6, value=book.availability)
+# 	outsheet.cell(row=n_row_full, column=7, value=book.prices)
+# 	outsheet.cell(row=n_row_full, column=8, value=book.price_DE)
 
 
-buk.save('vlb_data.xlsx')
+
+buk.save('vlb_data_delilah.xlsx')
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

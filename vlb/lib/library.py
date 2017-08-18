@@ -1,3 +1,8 @@
+from openpyxl import load_workbook
+from openpyxl import Workbook
+from openpyxl.compat import range
+from openpyxl.utils import get_column_letter
+import string
 import json, os
 import sys
 # append path to keys for import
@@ -58,7 +63,17 @@ def dach_prices(prices):
 	if not flag:
 		return 'No German Price'
 
+'''
+function to get the data from Delilah file
+'''
+def get_sheetdata(file):
 
+	wb = load_workbook(file)
+
+	names = wb.get_sheet_names()
+
+	return wb[names[0]] # data returned
+	
 # print(get_product(9783476043306))
 # print(get_product(9781430261063))
 # print(get_product(9781484213933))
