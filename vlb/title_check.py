@@ -14,45 +14,58 @@ sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
 from product import Product
 from library import get_product
 from openpyxl import Workbook
+import time
 
-data = get_product(9781430261063)
-book = Product(data)
-print(book.title)
-print(book.isbn)
-print(book.availability)
+startTime = time.time()
 
-# isbns = ['9781430261063', '9781484209264', '9781484211922', '9781484213933']
+# data = get_product(9781430261063)
+# data = get_product(9783476043306)
+# book = Product(data)
+# print(book.title)
+# print(book.isbn)
+# print(book.availability)
+# print(book.prices)
 
-# buk = Workbook()
+isbns = ['9781430261063', '9781484209264', '9781484211922', '9781484213933']
 
-# outsheet = buk.active
-# outsheet.title = 'isbn check'
+buk = Workbook()
 
-# # name the output headers
-# # make this dynamic
-# n_row_full = 1
-# outsheet.cell(row=n_row_full, column=1, value="BFLUX ISBN")
-# outsheet.cell(row=n_row_full, column=2, value="BFLUX Title")
-# outsheet.cell(row=n_row_full, column=3, value="VLB ISBN")
-# outsheet.cell(row=n_row_full, column=4, value="VLB Title")
-# outsheet.cell(row=n_row_full, column=5, value="ISBN Match")
-# outsheet.cell(row=n_row_full, column=6, value="VLB Availability")
+outsheet = buk.active
+outsheet.title = 'isbn check'
 
-# for isbn in isbns:
-# 	n_row_full += 1
-# 	data = get_product(isbn)
-# 	book = Product(data)
-
-# 	if isbn == book.isbn:
-# 		match = True
-# 	else:
-# 		match = False		
-
-# 	outsheet.cell(row=n_row_full, column=1, value=isbn)
-# 	outsheet.cell(row=n_row_full, column=3, value=book.isbn)
-# 	outsheet.cell(row=n_row_full, column=4, value=book.title)
-# 	outsheet.cell(row=n_row_full, column=5, value=match)
-# 	outsheet.cell(row=n_row_full, column=6, value=book.availability)
+# name the output headers
+# make this dynamic
+n_row_full = 1
+outsheet.cell(row=n_row_full, column=1, value="BFLUX ISBN")
+outsheet.cell(row=n_row_full, column=2, value="BFLUX Title")
+outsheet.cell(row=n_row_full, column=3, value="VLB ISBN")
+outsheet.cell(row=n_row_full, column=4, value="VLB Title")
+outsheet.cell(row=n_row_full, column=5, value="ISBN Match")
+outsheet.cell(row=n_row_full, column=6, value="VLB Availability")
+outsheet.cell(row=n_row_full, column=7, value="# of Prices")
+outsheet.cell(row=n_row_full, column=8, value="Price DE")
 
 
-# buk.save('vlb_data.xlsx')
+for isbn in isbns:
+	n_row_full += 1
+	data = get_product(isbn)
+	book = Product(data)
+
+	if isbn == book.isbn:
+		match = True
+	else:
+		match = False		
+
+	outsheet.cell(row=n_row_full, column=1, value=isbn)
+	outsheet.cell(row=n_row_full, column=3, value=book.isbn)
+	outsheet.cell(row=n_row_full, column=4, value=book.title)
+	outsheet.cell(row=n_row_full, column=5, value=match)
+	outsheet.cell(row=n_row_full, column=6, value=book.availability)
+	outsheet.cell(row=n_row_full, column=7, value=book.prices)
+	outsheet.cell(row=n_row_full, column=8, value=book.price_DE)
+
+
+
+buk.save('vlb_data.xlsx')
+
+print ('The script took {0} seconds !'.format(time.time() - startTime))

@@ -43,15 +43,25 @@ def response_dict(response):
 	else:
 		data_dict['code'] = response.code		
 
-	# test data	
-	# with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_test_pickle.txt', 'wb') as test_pickle:
+	# # test data	
+	# with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_test_pickle_error.txt', 'wb') as test_pickle:
 	# 	pickle.dump(data_dict, test_pickle)
 
 	return data_dict
 
+def dach_prices(prices):
+	flag = False
+	for price in prices:
+		if price['country'] == 'DE':
+			flag = True
+			return price['value']
+	if not flag:
+		return 'No German Price'
+
 
 # print(get_product(9783476043306))
 # print(get_product(9781430261063))
+# print(get_product(9781484213933))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 
 
