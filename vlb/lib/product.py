@@ -37,9 +37,9 @@ class Product():
 
 		except Exception as e:			
 			self.id = self.response_code
-			self.title = repr(self.response_code) + ' '+product['error']
-			self.isbn = repr(self.response_code) + ' '+product['error']
-			self.availability = repr(self.response_code) + ' '+product['error']
-			self.prices = repr(self.response_code) + ' '+product['error']
-			self.price_DE = repr(self.response_code) + ' '+product['error']
+			self.title = repr(self.response_code)
+			self.isbn = repr(self.response_code)
+			self.availability = repr(self.response_code)
+			self.prices = repr(self.response_code)
+			self.price_DE = repr(self.response_code)
 

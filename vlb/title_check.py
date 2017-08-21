@@ -34,22 +34,26 @@ outsheet = buk.active
 outsheet.title = 'isbn check'
 
 # name the output headers
-# make this dynamic
+# make this dynamic, or create in library
 n_row_full = 1
 outsheet.cell(row=n_row_full, column=1, value="BFLUX ISBN")
 outsheet.cell(row=n_row_full, column=2, value="BFLUX Title")
 outsheet.cell(row=n_row_full, column=3, value="VLB ISBN")
 outsheet.cell(row=n_row_full, column=4, value="VLB Title")
 outsheet.cell(row=n_row_full, column=5, value="ISBN Match")
+# blfux relevant for promotion
+# outsheet.cell(row=n_row_full, column=6, value="BLFUX Relevant for Promotion")
 outsheet.cell(row=n_row_full, column=6, value="VLB Availability")
-outsheet.cell(row=n_row_full, column=7, value="# of Prices")
+# price eur br
+# outsheet.cell(row=n_row_full, column=8, value="price_eur_br")
+outsheet.cell(row=n_row_full, column=7, value="# of VLB Prices")
 outsheet.cell(row=n_row_full, column=8, value="Price DE")
 
-data = get_sheetdata('dataset2017.xlsx')
+data = get_sheetdata('dataset\dataset2017.xlsx')
 
 count = data.max_row
 
-for n in range(2, 1000):
+for n in range(2, 100):
 	print(n)
 	isbn = data.cell(row=n, column=1).value
 	n_row_full += 1
@@ -70,26 +74,6 @@ for n in range(2, 1000):
 	outsheet.cell(row=n_row_full, column=7, value=book.prices)
 	outsheet.cell(row=n_row_full, column=8, value=book.price_DE)
 
-# for isbn in isbns:
-# 	n_row_full += 1
-# 	data = get_product(isbn)
-# 	book = Product(data)
-
-# 	if isbn == book.isbn:
-# 		match = True
-# 	else:
-# 		match = False		
-
-# 	outsheet.cell(row=n_row_full, column=1, value=isbn)
-# 	outsheet.cell(row=n_row_full, column=3, value=book.isbn)
-# 	outsheet.cell(row=n_row_full, column=4, value=book.title)
-# 	outsheet.cell(row=n_row_full, column=5, value=match)
-# 	outsheet.cell(row=n_row_full, column=6, value=book.availability)
-# 	outsheet.cell(row=n_row_full, column=7, value=book.prices)
-# 	outsheet.cell(row=n_row_full, column=8, value=book.price_DE)
-
-
-
-buk.save('vlb_data_delilah.xlsx')
+buk.save('results\\vlb_data_delilah.xlsx')
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))
