@@ -1,7 +1,4 @@
 from openpyxl import load_workbook
-from openpyxl import Workbook
-from openpyxl.compat import range
-from openpyxl.utils import get_column_letter
 import string
 import json, os
 import sys
@@ -9,7 +6,7 @@ import sys
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
 import urllib.request
-import pickle
+# import pickle
 
 metadata_token = os.environ['VLB_TOKEN_METADATA']
 
@@ -69,10 +66,11 @@ function to get the data from Delilah file
 def get_sheetdata(file):
 
 	wb = load_workbook(file)
-
 	names = wb.get_sheet_names()
-
 	return wb[names[0]] # data returned
+
+def get_attributes(data):
+	pass
 	
 # print(get_product(9783476043306))
 # print(get_product(9781430261063))
