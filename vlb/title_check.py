@@ -12,7 +12,7 @@ get mediaFiles count of list
 import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
 from product import Product
-from library import get_product
+from library import get_product_data
 
 sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
 from library import get_sheetdata
@@ -40,6 +40,8 @@ outsheet.title = 'isbn check'
 
 # name the output headers
 # make this dynamic, or create in library
+
+# report = Report('isbn check', 'VLB')
 n_row_full = 1
 outsheet.cell(row=n_row_full, column=1, value="BFLUX ISBN")
 outsheet.cell(row=n_row_full, column=2, value="BFLUX Title")
@@ -61,8 +63,10 @@ for n in range(2, 1000):
 	print(n)
 	item = BFLUXItem(data, n)	
 	n_row_full += 1 # change this to n
-	product_data = get_product(item.isbn)
+	product_data = get_product_data(item.isbn)
 	book = Product(product_data)
+
+	# report.generate(item, book)
 
 	if item.isbn == book.isbn:
 		match = True
@@ -87,6 +91,7 @@ for n in range(2, 1000):
 	outsheet.cell(row=n_row_full, column=10, value=match)
 	outsheet.cell(row=n_row_full, column=11, value=book.prices)
 
+# report.save('results\\vlb_data_delilah.xlsx')
 buk.save('results\\vlb_data_delilah.xlsx')
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

@@ -10,7 +10,7 @@ import urllib.request
 
 metadata_token = os.environ['VLB_TOKEN_METADATA']
 
-def get_product(isbn):
+def get_product_data(isbn):
 
 	url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'
 	return response_dict(get_request(url))	

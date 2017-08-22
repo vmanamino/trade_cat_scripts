@@ -29,3 +29,6 @@ def create_headers(outsheet, trader):
 	outsheet.cell(row=1, column=11, value="# of "+trader+" Prices")
 
 	return outsheet
+
+def add_row(outsheet, row_n, item, book):
+	pass
