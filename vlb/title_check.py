@@ -66,7 +66,7 @@ for n in range(2, 1000):
 	product_data = get_product_data(item.isbn)
 	book = Product(product_data)
 
-	# report.generate(item, book)
+	# report.generate(n, item, book)
 
 	if item.isbn == book.isbn:
 		match = True

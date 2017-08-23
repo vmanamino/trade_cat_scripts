@@ -12,7 +12,7 @@ def xlreport(title):
 	buk = Workbook()
 	outsheet = buk.active
 	outsheet.title = title
-	return outsheet
+	return buk, title
 
 def create_headers(outsheet, trader):
 
@@ -31,4 +31,28 @@ def create_headers(outsheet, trader):
 	return outsheet
 
 def add_row(outsheet, row_n, item, book):
+
+	if item.isbn == book.isbn:
+		match = True
+	else:
+		match = False		
+
+	outsheet.cell(row=row_n, column=1, value=item.isbn)
+	outsheet.cell(row=row_n, column=2, value=item.title)	
+	outsheet.cell(row=row_n, column=3, value=book.isbn)
+	outsheet.cell(row=row_n, column=4, value=book.title)
+	outsheet.cell(row=row_n, column=5, value=match)
+	outsheet.cell(row=row_n, column=6, value=item.promo_status)
+	outsheet.cell(row=row_n, column=7, value=book.availability)
+	outsheet.cell(row=row_n, column=8, value=item.price_DE)	
+	outsheet.cell(row=row_n, column=9, value=book.price_DE)
+
+	if item.price_DE == book.price_DE:
+		match = True
+	else:
+		match = False
+
+	outsheet.cell(row=row_n, column=10, value=match)
+	outsheet.cell(row=row_n, column=11, value=book.prices)
+
 	pass
