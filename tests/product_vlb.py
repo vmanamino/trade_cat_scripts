@@ -26,7 +26,7 @@ class productDataTests(unittest.TestCase):
 		# product isbn matches the isbn provided to the api
 		self.assertTrue(product.isbn == '9783476043306')
 		self.assertTrue(product_error.id == 401)
-		self.assertTrue(product_error.title == '401 invalid_token')
+		self.assertTrue(product_error.title == '401')
 
 
 def main():
