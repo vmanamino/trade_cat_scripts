@@ -56,6 +56,6 @@ for n in range(2, 1000):
 	book = Product(product_data)
 	report.generate(n, item, book)
 
-report.save('results\\vlb_data_delilah_test_2')
+report.save('results\\vlb_data_delilah_test_images')
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

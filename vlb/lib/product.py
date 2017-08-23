@@ -1,4 +1,4 @@
-from library_vlb import dach_prices
+from library_vlb import dach_prices, get_frontcover
 
 class Product():
 
@@ -30,6 +30,7 @@ class Product():
 				else:
 					self.prices = 'None'
 				self.price_DE = dach_prices(product['prices'])
+				self.front_cover = get_frontcover(product['mediaFiles'])
 				
 
 			else:
@@ -42,4 +43,5 @@ class Product():
 			self.availability = repr(self.response_code)
 			self.prices = repr(self.response_code)
 			self.price_DE = repr(self.response_code)
+			self.front_cover = repr(self.response_code)
 

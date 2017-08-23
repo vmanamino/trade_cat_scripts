@@ -27,6 +27,7 @@ def create_headers(outsheet, trader):
 	outsheet.cell(row=1, column=9, value="Price DE")
 	outsheet.cell(row=1, column=10, value="Price Match")
 	outsheet.cell(row=1, column=11, value="# of "+trader+" Prices")
+	outsheet.cell(row=1, column=12, value="# of "+trader+" Front Cover")
 
 	return outsheet
 
@@ -45,7 +46,7 @@ def add_row(outsheet, row_n, item, book):
 	outsheet.cell(row=row_n, column=6, value=item.promo_status)
 	outsheet.cell(row=row_n, column=7, value=book.availability)
 	outsheet.cell(row=row_n, column=8, value=item.price_DE)	
-	outsheet.cell(row=row_n, column=9, value=book.price_DE)
+	outsheet.cell(row=row_n, column=9, value=book.price_DE)	
 
 	if item.price_DE == book.price_DE:
 		match = True
@@ -54,5 +55,7 @@ def add_row(outsheet, row_n, item, book):
 
 	outsheet.cell(row=row_n, column=10, value=match)
 	outsheet.cell(row=row_n, column=11, value=book.prices)
+	outsheet.cell(row=row_n, column=12, value=book.front_cover)
+
 
 	pass

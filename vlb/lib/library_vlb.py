@@ -53,11 +53,16 @@ def response_dict(response):
 
 def get_frontcover(mediafiles):
 	# get the first 04 (front cover) OR 06 (front cover High Quality)
-	# flag = False
-	# for file in mediafiles:
-	# 	if file['type'] == '04' or if file['type'] == '05'
-	# 	flag = True
-	pass
+	flag = False
+	for file in mediafiles:
+		if file['type'] == '06':
+			flag = True
+			return file['link']
+		elif file['type'] == '04':
+			flag = True
+			return file['link']	
+	if not flag:
+			return "No front cover"
 
 # add AT and CH
 def dach_prices(prices):
