@@ -51,6 +51,15 @@ def response_dict(response):
 
 	return data_dict
 
+def get_frontcover(mediafiles):
+	# get the first 04 (front cover) OR 06 (front cover High Quality)
+	# flag = False
+	# for file in mediafiles:
+	# 	if file['type'] == '04' or if file['type'] == '05'
+	# 	flag = True
+	pass
+
+# add AT and CH
 def dach_prices(prices):
 	flag = False
 	for price in prices:

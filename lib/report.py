@@ -33,7 +33,10 @@ class Report():
 		print(filename)
 			
 # data = get_product_data(9783476043306)
+# print(get_product_data(9783319588193))
+# print(data)
 # book = Product(data)
+# print(book.id)
 # data = get_sheetdata('..\\vlb\dataset\dataset2017.xlsx')
 # item = BFLUXItem(data, 2)
 # report = Report('isbn check', 'VLB')
