@@ -1,4 +1,4 @@
-from library import dach_prices
+from library_vlb import dach_prices
 
 class Product():
 
