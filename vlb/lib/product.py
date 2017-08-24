@@ -10,7 +10,7 @@ class Product():
 		try:
 			if self.response_code == 200:				
 				self.id = product['id']
-				# code is from ONIX list 51	
+				# code is from ONIX list 54	
 				self.availability = product['availabilityStatusCode']
 				# move this to library	
 				if (len(product['titles']) >= 1):
