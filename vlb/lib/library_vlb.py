@@ -66,13 +66,29 @@ def get_frontcover(mediafiles):
 
 # add AT and CH
 def dach_prices(prices):
-	flag = False
+	flag_de = False
+	flag_at = False
+	flag_ch = False
+	dachs = {'DE':'', 'AT':'', 'CH':''}
 	for price in prices:
 		if price['country'] == 'DE':
-			flag = True
-			return price['value']
-	if not flag:
-		return 'No German Price'
+			flag_de = True
+			dachs['DE'] = price['value']
+		if price['country'] == 'AT':
+			flag_de = True
+			dachs['AT'] = price['value']
+		if price['country'] == 'CH':
+			flag_de = True
+			dachs['CH'] = price['value']
+
+	if not flag_de:
+		dachs['DE'] = "No German Price"
+	if not flag_at:
+		dachs['AT'] = "No Austrian Price"
+	if not flag_at:
+		dachs['CH'] = "No Swiss Price"
+
+	return dachs
 
 '''
 function to get the data from Delilah file
