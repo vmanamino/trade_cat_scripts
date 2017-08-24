@@ -23,12 +23,13 @@ def create_headers(outsheet, trader):
 	outsheet.cell(row=1, column=5, value=trader+" Title")
 	outsheet.cell(row=1, column=6, value="ISBN Match")
 	outsheet.cell(row=1, column=7, value="BFLUX Promo Status")
-	outsheet.cell(row=1, column=8, value=trader+" Availability")
-	outsheet.cell(row=1, column=9, value="price_eur_br")
-	outsheet.cell(row=1, column=10, value="Price DE")
-	outsheet.cell(row=1, column=11, value="Price Match")
-	outsheet.cell(row=1, column=12, value="# of "+trader+" Prices")
-	outsheet.cell(row=1, column=13, value="# of "+trader+" Front Cover")
+	outsheet.cell(row=1, column=8, value="BFLUX Del Status")
+	outsheet.cell(row=1, column=9, value=trader+" Availability")
+	outsheet.cell(row=1, column=10, value="price_eur_br")
+	outsheet.cell(row=1, column=11, value="Price DE")
+	outsheet.cell(row=1, column=12, value="Price Match")
+	outsheet.cell(row=1, column=13, value="# of "+trader+" Prices")
+	outsheet.cell(row=1, column=14, value="# of "+trader+" Front Cover")
 
 	return outsheet
 
@@ -46,17 +47,18 @@ def add_row(outsheet, row_n, item, book):
 	outsheet.cell(row=row_n, column=5, value=book.title)
 	outsheet.cell(row=row_n, column=6, value=match)
 	outsheet.cell(row=row_n, column=7, value=item.promo_status)
-	outsheet.cell(row=row_n, column=8, value=book.availability)
-	outsheet.cell(row=row_n, column=9, value=item.price_DE)	
-	outsheet.cell(row=row_n, column=10, value=book.price_DE)	
+	outsheet.cell(row=row_n, column=8, value=item.del_status)
+	outsheet.cell(row=row_n, column=9, value=book.availability)
+	outsheet.cell(row=row_n, column=10, value=item.price_DE)	
+	outsheet.cell(row=row_n, column=11, value=book.price_DE)	
 
 	if item.price_DE == book.price_DE:
 		match = True
 	else:
 		match = False
 
-	outsheet.cell(row=row_n, column=11, value=match)
-	outsheet.cell(row=row_n, column=12, value=book.prices)
-	outsheet.cell(row=row_n, column=12, value=book.front_cover)
+	outsheet.cell(row=row_n, column=12, value=match)
+	outsheet.cell(row=row_n, column=13, value=book.prices)
+	outsheet.cell(row=row_n, column=14, value=book.front_cover)
 	
 	return outsheet
