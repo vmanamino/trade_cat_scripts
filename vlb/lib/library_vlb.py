@@ -90,7 +90,58 @@ def dach_prices(prices):
 
 	return dachs
 
+def avail_code_desc(avail_code):
+	desc = ''
+	if avail_code == 'AB':
+		desc = 'Cancelled'	
+	elif avail_code == 'AD':
+		desc = 'Available direct from publisher only'
+	elif avail_code == 'CS':
+		desc = 'Availability uncertain'
+	elif avail_code == 'EX':
+		desc = 'No longer stocked by us'
+	elif avail_code == 'IP':
+		desc = 'Available'
+	elif avail_code == 'MD':
+		desc = 'Manufactured on demand'
+	elif avail_code == 'NP':
+		desc = 'Not yet published'
+	elif avail_code == 'NY':
+		desc = 'Newly catalogued, not yet in stock'
+	elif avail_code == 'OF':
+		desc = 'Other format available'
+	elif avail_code == 'OI':
+		desc = 'Out of stock indefinitely'
+	elif avail_code == 'OP':
+		desc = 'Out of print'
+	elif avail_code == 'OR':
+		desc = 'Replaced by new edition'
+	elif avail_code == 'PP':
+		desc = 'Publication postponed indefinitely'	
+	elif avail_code == 'RF':
+		desc = 'Refer to another supplier'
+	elif avail_code == 'RM':
+		desc = 'Remaindered'
+	elif avail_code == 'RP':
+		desc = 'Reprinting'
+	elif avail_code == 'RU':
+		desc = 'Reprinting, undated'
+	elif avail_code == 'TO':
+		desc = 'Special order'
+	elif avail_code == 'TP':
+		desc = 'Temporarily out of stock because publisher cannot supply'
+	elif avail_code == 'TU':
+		desc = 'Temporarily unavailable'
+	elif avail_code == 'UR':
+		desc = 'Unavailable, awaiting reissue'
+	elif avail_code == 'WR':
+		desc = 'Will be remaindered as of (date)'
+	elif avail_code == 'WS':
+		desc = 'Withdrawn from sale'
+	else:
+		desc = 'No valid code'
 
+	return desc
 
 '''
 function to get the data from Delilah excel file
@@ -109,5 +160,5 @@ def get_attributes(data):
 # print(get_product(9781484213933))
 # print(get_product_data(9783658147747))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
-
+# print(avail_code_desc('MD'))
 

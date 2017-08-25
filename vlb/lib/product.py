@@ -1,4 +1,4 @@
-from library_vlb import dach_prices, get_frontcover
+from library_vlb import dach_prices, get_frontcover, avail_code_desc
 
 class Product():
 
@@ -12,6 +12,7 @@ class Product():
 				self.id = product['id']
 				# code is from ONIX list 54	
 				self.availability = product['availabilityStatusCode']
+				self.availability_desc = avail_code_desc(self.availability)
 				# move this to library	
 				if (len(product['titles']) >= 1):
 					title = product['titles'][0]
@@ -45,6 +46,7 @@ class Product():
 			self.title = repr(self.response_code)
 			self.isbn = repr(self.response_code)
 			self.availability = repr(self.response_code)
+			self.availability_desc = repr(self.response_code)
 			self.prices = repr(self.response_code)
 			self.price_DE = repr(self.response_code)
 			self.price_AT = repr(self.response_code)

@@ -22,6 +22,7 @@ class productDataTests(unittest.TestCase):
 
 		self.assertTrue(product.title == 'Sparta Verfassungs- und Sozialgeschichte einer griechischen Polis')
 		self.assertTrue(product.availability == 'MD')
+		self.assertTrue(product.availability_desc == 'Manufactured on demand')
 		
 		# product isbn matches the isbn provided to the api
 		self.assertTrue(product.isbn == '9783476043306')		

@@ -25,6 +25,9 @@ startTime = time.time()
 # product = Product(product_data)
 # print(product_data)
 # print(product.price_DE)
+# print(product.availability_desc)
+
+
 report = Report('isbn check', 'VLB')
 
 data = get_sheetdata('dataset\dataset2017_cover.xlsx')
@@ -38,6 +41,6 @@ for n in range(2, 100):
 	book = Product(product_data)
 	report.generate(n, item, book)
 
-report.save('results\\vlb_data_delilah_test_cover')
+report.save('results\\vlb_data_delilah_test_avail')
 
-print ('The script took {0} seconds !'.format(time.time() - startTime))
+# print ('The script took {0} seconds !'.format(time.time() - startTime))
