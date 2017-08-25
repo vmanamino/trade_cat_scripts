@@ -15,6 +15,7 @@ class BFLUXItem():
 			self.price_DE = data.cell(row=row_n, column=8).value
 			self.price_AT = data.cell(row=row_n, column=9).value
 			self.price_CH = data.cell(row=row_n, column=10).value
+			self.cover_status = data.cell(row=row_n, column=11).value
 		else:
 			self.isbn = "no item provided"
 			self.title = "no item provided"
@@ -26,6 +27,7 @@ class BFLUXItem():
 			self.price_DE = "no item provided"
 			self.price_AT = "no item provided"
 			self.price_CH = "no item provided"
+			self.cover_status = "no item provided"
 
 # data = get_sheetdata('..\\vlb\dataset\dataset2017_prices.xlsx')
 # item = BFLUXItem(data, 2)

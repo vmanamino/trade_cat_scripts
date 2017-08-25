@@ -36,6 +36,8 @@ def create_headers(outsheet, trader):
 	outsheet.cell(row=1, column=18, value="Price CH Match")
 	outsheet.cell(row=1, column=19, value="# of "+trader+" Prices")
 	outsheet.cell(row=1, column=20, value=trader+" Front Cover")
+	outsheet.cell(row=1, column=21, value="BFLUX cover status")
+
 
 	return outsheet
 
@@ -84,5 +86,7 @@ def add_row(outsheet, row_n, item, book):
 	outsheet.cell(row=row_n, column=18, value=match)
 	outsheet.cell(row=row_n, column=19, value=book.prices)
 	outsheet.cell(row=row_n, column=20, value=book.front_cover)
+	outsheet.cell(row=row_n, column=21, value=item.cover_status)
+
 	
 	return outsheet
