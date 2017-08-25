@@ -28,6 +28,7 @@ class productDataTests(unittest.TestCase):
 		self.assertTrue(product.price_DE == 29.99)
 		self.assertTrue(product.price_AT == 30.83)
 		self.assertTrue(product.price_CH == 31.0)
+		self.assertTrue(product.front_cover == 'https://api.vlb.de/api/v1/cover/9783476043306/m')
 		self.assertTrue(product_error.id == 401)
 		self.assertTrue(product_error.title == '401')
 
