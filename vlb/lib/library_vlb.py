@@ -90,8 +90,10 @@ def dach_prices(prices):
 
 	return dachs
 
+
+
 '''
-function to get the data from Delilah file
+function to get the data from Delilah excel file
 '''
 def get_sheetdata(file):
 
