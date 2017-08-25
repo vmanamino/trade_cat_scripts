@@ -30,17 +30,17 @@ startTime = time.time()
 
 report = Report('isbn check', 'VLB')
 
-data = get_sheetdata('dataset\dataset2017_cover.xlsx')
+data = get_sheetdata('dataset\dataset2017.xlsx')
 
-# count = data.max_row
+count = data.max_row
 
-for n in range(2, 100):
+for n in range(2, count):
 	print(n)
 	item = BFLUXItem(data, n)		
 	product_data = get_product_data(item.isbn)
 	book = Product(product_data)
 	report.generate(n, item, book)
 
-report.save('results\\vlb_data_delilah_test_avail')
+report.save('results\\vlb_isbn_check')
 
-# print ('The script took {0} seconds !'.format(time.time() - startTime))
+print ('The script took {0} seconds !'.format(time.time() - startTime))

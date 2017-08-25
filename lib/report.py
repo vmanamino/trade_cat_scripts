@@ -17,8 +17,8 @@ class Report():
 		self.worksheet = self.workbook.active
 		self.report = create_headers(self.worksheet, trader)
 
-	def generate(self, row_n, item, book):
-		self.report = add_row(self.worksheet, row_n, item, book)
+	def generate(self, row_n, bflux_item, book):
+		self.report = add_row(self.worksheet, row_n, bflux_item, book)
 		# pass
 
 	# @staticmethod
