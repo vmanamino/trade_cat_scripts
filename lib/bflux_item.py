@@ -13,6 +13,8 @@ class BFLUXItem():
 			self.promo_status = data.cell(row=row_n, column=6).value
 			self.del_status = data.cell(row=row_n, column=7).value
 			self.price_DE = data.cell(row=row_n, column=8).value
+			self.price_AT = data.cell(row=row_n, column=9).value
+			self.price_CH = data.cell(row=row_n, column=10).value
 		else:
 			self.isbn = "no item provided"
 			self.title = "no item provided"
@@ -22,12 +24,17 @@ class BFLUXItem():
 			self.promo_status = "no item provided"
 			self.del_status = "no item provided"
 			self.price_DE = "no item provided"
+			self.price_AT = "no item provided"
+			self.price_CH = "no item provided"
 
-# data = get_sheetdata('..\\vlb\dataset\dataset2017.xlsx')
-# item = BFLUXItem(data, 1)
+# data = get_sheetdata('..\\vlb\dataset\dataset2017_prices.xlsx')
+# item = BFLUXItem(data, 2)
 # print(item.isbn)
 # print(item.title)
 # print(item.copyright_year)
 # print(item.medium)
 # print(item.promo_status)
-# print(item.price_de)
+# print(item.price_DE)
+# print(item.price_AT)
+# print(item.price_CH)
+
