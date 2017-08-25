@@ -21,19 +21,23 @@ from report import Report
 import time
 
 startTime = time.time()
+# product_data = get_product_data(9783662534991)
+# product = Product(product_data)
+# print(product_data)
+# print(product.price_DE)
 report = Report('isbn check', 'VLB')
 
 data = get_sheetdata('dataset\dataset2017_imprints.xlsx')
 
 # count = data.max_row
 
-for n in range(2, 100):
+for n in range(2, 10):
 	print(n)
 	item = BFLUXItem(data, n)		
 	product_data = get_product_data(item.isbn)
 	book = Product(product_data)
 	report.generate(n, item, book)
 
-report.save('results\\vlb_data_delilah_test_imprints')
+report.save('results\\vlb_data_delilah_test_dachs')
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

@@ -75,17 +75,17 @@ def dach_prices(prices):
 			flag_de = True
 			dachs['DE'] = price['value']
 		if price['country'] == 'AT':
-			flag_de = True
+			flag_at = True
 			dachs['AT'] = price['value']
 		if price['country'] == 'CH':
-			flag_de = True
+			flag_ch = True
 			dachs['CH'] = price['value']
 
 	if not flag_de:
 		dachs['DE'] = "No German Price"
 	if not flag_at:
 		dachs['AT'] = "No Austrian Price"
-	if not flag_at:
+	if not flag_ch:
 		dachs['CH'] = "No Swiss Price"
 
 	return dachs
@@ -102,9 +102,10 @@ def get_sheetdata(file):
 def get_attributes(data):
 	pass
 	
-# print(get_product(9783476043306))
+# print(get_product_data(9783476043306))
 # print(get_product(9781430261063))
 # print(get_product(9781484213933))
+# print(get_product_data(9783658147747))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 
 

@@ -29,7 +29,11 @@ class Product():
 					self.prices = len(product['prices'])
 				else:
 					self.prices = 'None'
-				self.price_DE = dach_prices(product['prices'])
+				dachs = dach_prices(product['prices'])
+				self.price_DE = dachs['DE']
+				self.price_AT = dachs['AT']
+				self.price_CH = dachs['CH']
+				# self.price_DE = dach_prices(product['prices'])
 				self.front_cover = get_frontcover(product['mediaFiles'])
 				
 
@@ -43,5 +47,7 @@ class Product():
 			self.availability = repr(self.response_code)
 			self.prices = repr(self.response_code)
 			self.price_DE = repr(self.response_code)
+			self.price_AT = repr(self.response_code)
+			self.price_CH = repr(self.response_code)
 			self.front_cover = repr(self.response_code)
 
