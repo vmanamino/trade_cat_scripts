@@ -41,6 +41,9 @@ for n in range(2, count):
 	book = Product(product_data)
 	report.generate(n, item, book)
 
-report.save('results\\vlb_isbn_check')
+print_date = time.strftime("%d%m%y")
+print_time = time.strftime("%I%M%S")
+
+report.save('results\\vlb_isbn_check'+print_date+'_'+print_time)
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

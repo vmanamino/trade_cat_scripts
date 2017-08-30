@@ -67,6 +67,7 @@ def get_frontcover(mediafiles):
 
 # add AT and CH
 def dach_prices(prices):
+
 	today = datetime.date.today()
 	flag_de = False
 	flag_de_valid = False
@@ -75,8 +76,9 @@ def dach_prices(prices):
 	flag_ch = False
 	flag_ch_valid = False
 	dachs = {'DE':'', 'AT':'', 'CH':''}
+
 	for price in prices:
-		valid_price_date = False
+		valid_price_date = False		
 		validFrom_str = price['validFrom']
 		validTo_str = price['validUntil']
 		validFrom = ''
@@ -108,6 +110,8 @@ def dach_prices(prices):
 			if validTo > today:			
 				valid_price_date = True
 
+		# if the price has a valid date, then assign it to a country
+
 		if valid_price_date:
 
 			if price['country'] == 'DE':
@@ -119,7 +123,11 @@ def dach_prices(prices):
 			if price['country'] == 'CH':
 				flag_ch = True
 				dachs['CH'] = price['value']
-		else:
+
+		# if a price does not have a valid date, then
+		# if a price has not been assigned already for a specific country
+		
+		elif not dachs['DE'] or not dachs['AT'] or not dachs['CH']:
 
 			if price['country'] == 'DE':
 				flag_de = True				
@@ -131,13 +139,12 @@ def dach_prices(prices):
 				flag_ch = True
 				dachs['CH'] = 'no valid CH price'
 
-
 	if not flag_de:
-		dachs['DE'] = "No German Price"
+		dachs['DE'] = "No DE Price"
 	if not flag_at:
-		dachs['AT'] = "No Austrian Price"
+		dachs['AT'] = "No AT Price"
 	if not flag_ch:
-		dachs['CH'] = "No Swiss Price"
+		dachs['CH'] = "No CH Price"
 
 	return dachs
 
@@ -207,53 +214,54 @@ def get_attributes(data):
 	pass
 	
 
-today = datetime.date.today()
+# today = datetime.date.today()
 # # print(len(get_product_data(9783476043306)['content']['prices']))
-for price in get_product_data(9781484213933)['content']['prices']:
-	valid_price_date = False
-	validFrom_str = price['validFrom']
-	validTo_str = price['validUntil']
-	validFrom = ''
-	validTo = ''
-	print(price['country'])
-	print('start ', end='')
-	print(price['validFrom'])
-	print('to ', end='')
-	print(price['validUntil'])
-	if validFrom_str:
-		day, month, year =  map(int, validFrom_str.split('.'))
-		validFrom = datetime.date(year, month, day)	
+# for price in get_product_data(9781484213933)['content']['prices']:
+# 	valid_price_date = False
+# 	validFrom_str = price['validFrom']
+# 	validTo_str = price['validUntil']
+# 	validFrom = ''
+# 	validTo = ''
+# 	print(price['country'])
+# 	print('start ', end='')
+# 	print(price['validFrom'])
+# 	print('to ', end='')
+# 	print(price['validUntil'])
+# 	if validFrom_str:
+# 		day, month, year =  map(int, validFrom_str.split('.'))
+# 		validFrom = datetime.date(year, month, day)	
 
-		if validTo_str:			
-			day, month, year =  map(int, validTo_str.split('.'))
-			validTo = datetime.date(year, month, day)		
+# 		if validTo_str:			
+# 			day, month, year =  map(int, validTo_str.split('.'))
+# 			validTo = datetime.date(year, month, day)		
 		
-		if validFrom < today:
-			if validTo:				
-				if validTo > today:
-					valid_price_date = True
+# 		if validFrom < today:
+# 			if validTo:				
+# 				if validTo > today:
+# 					valid_price_date = True
 					
-			else:				
-				valid_price_date = True
+# 			else:				
+# 				valid_price_date = True
 				
 
-	elif validTo_str == None:		
-		valid_price_date = True		
+# 	elif validTo_str == None:		
+# 		valid_price_date = True		
 
-	else:
-		day, month, year =  map(int, validTo_str.split('.'))
-		validTo = datetime.date(year, month, day)
-		if validTo > today:			
-			valid_price_date = True
+# 	else:
+# 		day, month, year =  map(int, validTo_str.split('.'))
+# 		validTo = datetime.date(year, month, day)
+# 		if validTo > today:			
+# 			valid_price_date = True
 			
 
 
 
 # print(get_product(9781430261063))
 # print(get_product_data(9781484213933))
-# print(get_product_data(9781484213933)['content']['prices'])
+# prices = get_product_data(9781484213933)['content']['prices']
+# print(dach_prices(prices)) 
+# prices = get_product_data(9783658147747)['content']['prices'] # good test
 # print(dach_prices(prices))
-# print(get_product_data(9783658147747)) # good test
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 # print(avail_code_desc('MD'))
 
