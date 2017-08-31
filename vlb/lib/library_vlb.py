@@ -67,7 +67,7 @@ def get_frontcover(mediafiles):
 
 # add AT and CH
 def dach_prices(prices):
-
+	count = 0
 	today = datetime.date.today()
 	flag_de = False
 	flag_de_valid = False
@@ -78,12 +78,15 @@ def dach_prices(prices):
 	dachs = {'DE':'', 'AT':'', 'CH':''}
 
 	for price in prices:
+		count += 1
+		print(count)
 		valid_price_date = False		
 		validFrom_str = price['validFrom']
 		validTo_str = price['validUntil']
 		validFrom = ''
 		validTo = ''
-		
+		# print(price["country"], end=" ")
+		# print(validFrom_str)
 		if validFrom_str:
 			day, month, year =  map(int, validFrom_str.split('.'))
 			validFrom = datetime.date(year, month, day)	
@@ -105,13 +108,17 @@ def dach_prices(prices):
 			valid_price_date = True		
 
 		else:
+			# print(price["id"], end=" ")
+			# print(price["country"], end=" ")
+			# print(validFrom_str, end=" = ")
+			# print(price["value"], end=" -- ")
 			day, month, year =  map(int, validTo_str.split('.'))
 			validTo = datetime.date(year, month, day)
 			if validTo > today:			
 				valid_price_date = True
 
 		# if the price has a valid date, then assign it to a country
-
+		
 		if valid_price_date:
 
 			if price['country'] == 'DE':
@@ -123,11 +130,14 @@ def dach_prices(prices):
 			if price['country'] == 'CH':
 				flag_ch = True
 				dachs['CH'] = price['value']
+			# print(dachs)
 
 		# if a price does not have a valid date, then
 		# if a price has not been assigned already for a specific country
 		
 		elif not dachs['DE'] or not dachs['AT'] or not dachs['CH']:
+			print("no dachs", end=": ")
+			print(dachs)
 
 			if price['country'] == 'DE':
 				flag_de = True				
@@ -138,7 +148,7 @@ def dach_prices(prices):
 			if price['country'] == 'CH':
 				flag_ch = True
 				dachs['CH'] = 'no valid CH price'
-
+		print(dachs)
 	if not flag_de:
 		dachs['DE'] = "No DE Price"
 	if not flag_at:
@@ -264,4 +274,6 @@ def get_attributes(data):
 # print(dach_prices(prices))
 # # get_request('http://api.vlb.de/api/v1/product/9783476043306/isbn13')
 # print(avail_code_desc('MD'))
-
+prices = get_product_data(9788132236566)['content']['prices']
+# print(prices)
+dach_prices(prices)
