@@ -30,10 +30,19 @@ startTime = time.time()
 
 report = Report('isbn check', 'VLB')
 
-data = get_sheetdata('dataset\dataset2017.xlsx')
+
+medium = sys.argv[1]
+promotion = sys.argv[2]
+year = sys.argv[3]
+# print(medium+' '+promotion+' '+year)
+
+filename = medium + '_' + promotion + '_' + year + '.xlsx'
+print(filename)
+data = get_sheetdata('dataset\\'+filename)
 
 count = data.max_row
 
+print(count)
 for n in range(2, count):
 	print(n)
 	item = BFLUXItem(data, n)		
@@ -44,6 +53,9 @@ for n in range(2, count):
 print_date = time.strftime("%d%m%y")
 print_time = time.strftime("%I%M%S")
 
-report.save('results\\vlb_isbn_check'+print_date+'_'+print_time)
+report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
+# print(report_name)
+report.save('results\\'+report_name)
+# report.save('results\\vlb_isbn_check'+print_date+'_'+print_time)
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))

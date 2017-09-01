@@ -92,3 +92,17 @@ def add_row(outsheet, row_n, item, book):
 
 	
 	return outsheet
+
+def file_splitter(row_count):
+	row_count_each_file = 12000
+	if row_count > row_count_each_file:		
+		remain = row_count%row_count_each_file
+		filler = row_count_each_file - remain
+		return row_count + filler
+	else:
+		return row_count
+
+# print(file_splitter(11000))
+
+	
+
