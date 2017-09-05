@@ -198,6 +198,19 @@ def avail_code_desc(avail_code):
 	return desc
 
 '''
+function to get each sheet from Delilah excel file, in cases 
+where results are greater than 65000 titles
+'''
+def get_worksheets(file):
+	worksheets = []
+	workbook = load_workbook(file)
+	for worksheet in workbook.worksheets:
+		if worksheet.title != 'DQL':
+			worksheets.append(worksheet)
+	return worksheets
+
+
+'''
 function to get the data from Delilah excel file
 '''
 def get_sheetdata(file):
@@ -206,7 +219,7 @@ def get_sheetdata(file):
 	return wb[names[0]] # data returned
 
 # print(get_product(9781430261063))
-# print(get_product_data(9781484213933))
+# print(get_product_data(9781484213933)['code'])
 # prices = get_product_data(9781484213933)['content']['prices']
 # print(dach_prices(prices)) 
 # prices = get_product_data(9783658147747)['content']['prices'] # good test

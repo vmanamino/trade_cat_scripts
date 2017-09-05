@@ -13,6 +13,7 @@ import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
 from product import Product
 from library_vlb import get_product_data
+from library_vlb import get_worksheets
 
 sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
 from library_common import get_sheetdata
@@ -36,26 +37,59 @@ promotion = sys.argv[2]
 year = sys.argv[3]
 # print(medium+' '+promotion+' '+year)
 
+
 filename = medium + '_' + promotion + '_' + year + '.xlsx'
 print(filename)
-data = get_sheetdata('dataset\\'+filename)
 
-count = data.max_row
+# data = get_sheetdata('dataset\\'+filename)
 
-print(count)
-for n in range(2, count):
-	print(n)
-	item = BFLUXItem(data, n)		
-	product_data = get_product_data(item.isbn)
-	book = Product(product_data)
-	report.generate(n, item, book)
+# count = data.max_row
+
+log_count = 0
+
+log = open('results\\simple_log.txt', 'w')
+log.write('%s\t%s\n' % ('Item logged', 'Code'))
+
+worksheets = get_worksheets('dataset\\'+filename)
+
+for data in worksheets:
+	count = data.max_row
+	
+	for n in range(2, count):
+		log_count += 1
+		print(log_count)		
+		item = BFLUXItem(data, n)
+		product_data = get_product_data(item.isbn)
+		log.write('%s\t%s\n' % (log_count, product_data['code']))
+		book = Product(product_data)
+		report.generate(n, item, book)
+
+	log_count += 1
+	log.write('%s\t%s\n' % (log_count, '200'))
 
 print_date = time.strftime("%d%m%y")
 print_time = time.strftime("%I%M%S")
 
 report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
-# print(report_name)
 report.save('results\\'+report_name)
+log.close()
+
+# print(count)
+# for n in range(2, count):
+# 	print(n)
+# 	item = BFLUXItem(data, n)		
+# 	product_data = get_product_data(item.isbn)
+# 	book = Product(product_data)
+# 	report.generate(n, item, book)
+
+# print_date = time.strftime("%d%m%y")
+# print_time = time.strftime("%I%M%S")
+
+# report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
+
+# report.save('results\\'+report_name)
+
+# print(report_name)
 # report.save('results\\vlb_isbn_check'+print_date+'_'+print_time)
 
 print ('The script took {0} seconds !'.format(time.time() - startTime))
