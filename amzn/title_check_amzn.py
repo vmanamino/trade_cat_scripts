@@ -35,8 +35,8 @@ del my_list[0]
 param_vals_bytes = []
 count = 0
 
-a = 'a'
-A = 'A'
+a = 'alphabet'
+A = 'Alphabet'
 
 # for each in my_list:
 # 	count += 1
