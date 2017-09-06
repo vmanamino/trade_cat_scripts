@@ -60,6 +60,7 @@ for data in worksheets:
 		print(log_count)		
 		item = BFLUXItem(data, n)
 		product_data = get_product_data(item.isbn)
+		print(product_data['code'])
 		log.write('%s\t%s\n' % (log_count, product_data['code']))
 		book = Product(product_data)
 		report.generate(n, item, book)
