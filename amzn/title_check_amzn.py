@@ -1,4 +1,5 @@
 import datetime
+# import time
 import hmac
 import hashlib
 import base64
@@ -8,104 +9,54 @@ import sys
 # append path to keys for import
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
+import urllib
 from urllib.parse import urlencode, quote_plus
+
+
+amzn_id = os.environ['AMZN_DE_ACCESS_ID']
+amzn_key = os.environ['AMZN_DE_ACCESS_KEY']
+assoc_tag = os.environ['AMZN_ASSOC_TAG']
 
 
 date_time = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-amzn_id = os.environ['AMZN_DE_ACCESS_ID']
-amzn_key = os.environ['AMZN_DE_ACCESS_KEY']
-amzn_key = bytes(amzn_key, 'utf-8' )
-assoc_tag = os.environ['AMZN_ASSOC_TAG']
+date_time = urllib.parse.quote(date_time, safe='')
+print(date_time)
 
-date_list = date_time.split(':')
-print(date_list)
-date_time_encoded = '%'.join(date_list)
-print(date_time_encoded)
+item_id = '9783476043306'
 
-req = ('http://webservices.amazon.de/onca/xml?AWSAccessKeyId='+amzn_id+'&AssociateTag='+assoc_tag+'&ContentType'
-'=&IdType=ISBN&ItemId=9781484219379&Operation=ItemLookup&ResponseGroup=Images&SearchIndex=Books&Service=AWSECommerceService&'
-'Timestamp='+date_time_encoded)
+s = ('http://webservices.amazon.de/onca/xml?AWSAccessKeyId='+amzn_id+'&AssociateTag='+assoc_tag+'&ContentType'
+'=&IdType=ISBN&ItemId='+item_id+'&Operation=ItemLookup&ResponseGroup=OfferSummary&SearchIndex=Books&Service=AWSECommerceService&'
+'Timestamp='+date_time)
 
-my_list = req.split('&')
-print(my_list)
-my_list.sort()
-print(my_list)
-del my_list[0]
-param_vals_bytes = []
-count = 0
+pairs = s.split('?')
+del pairs[0]
+pairs = pairs[0].split('&')
+pairs.sort()
 
-a = 'alphabet'
-A = 'Alphabet'
+s = "&".join(pairs)
+verb = 'GET\n'
+domain = 'webservices.amazon.de\n'
+expression = '/onca/xml\n'
+to_be_prepended = verb + domain + expression
+s_to_send = to_be_prepended + s
+s_to_send = bytes(s_to_send, 'utf-8')
+amzn_key = bytes(amzn_key, 'utf-8')
+digest = hmac.new(amzn_key, msg=s_to_send, digestmod=hashlib.sha256).digest()
 
-# for each in my_list:
-# 	count += 1
-# 	data = bytes(each, 'ascii')
-# 	if count is 1:
-# 		param_vals_bytes.append(data)
-# 	else:
-# 		if param_vals_bytes
+autograph = base64.b64encode(digest)
+autograph = autograph.decode('utf-8')
 
+signature = urllib.parse.quote(autograph, safe='')
 
-# print(my_list)
+signature_param_value = '&Signature='+signature
 
-# my_list.sort()
-
-# print(my_list)
-
+s_to_send_to_string = s_to_send.decode('utf-8')
+s_as_stanza = s_to_send_to_string +''+signature_param_value
+s_verb_removed = s_as_stanza[4:]
+request = s_verb_removed.replace('\n', '').replace('xml', 'xml?')
+http_prefix = 'http://'
+url_request = http_prefix + request
+print(url_request)
 
 
-
-
-
-
-
-# item_id = '9781484219379'
-
-# payload = {'AWSAccessKeyId': amzn_id,
-# 			'AssociateTag': assoc_tag,
-# 			'IdType': 'ISBN',
-# 			'ItemId': item_id,
-# 			'Operation': 'ItemLookup',
-# 			'ResponseGroup': 'Images',
-# 			'SearchIndex': 'Books',
-# 			'Service': 'AWSECCommerceService',
-# 			'Timestamp': date_time}
-
-
-
-# query = urlencode(payload, quote_via=quote_plus)
-
-# data = "GET\nwebservices.amazon.de\n/onca/xml\n"+query
-
-# data = urlencode(data)
-# digest = hmac.new(amzn_key, data, sha256).digest()
-
-# print(digest)
-# req_as_bytes = str.encode(req)
-# key_as_bytes = str.encode(amzn_key)
-
-# dig = hmac.new(key_as_bytes, msg=req_as_bytes, digestmod=hashlib.sha256).digest()
-# myhash = base64.b64encode(dig).decode()
-# req = urllib.parse.quote(req)
-# print(req)
-
-# msg = bytes(req, 'utf-8')
-# secret = bytes(amzn_key, 'utf-8')
-
-# hash = hmac.new(secret, msg, hashlib.sha256)
-# sig = base64.b64encode(hash.digest())
-
-
-# print(sig)
-
-
-# req += '&Signature='+str(sig)
-
-# print(req)
-
-# print(dig)
-
-# print(myhash)
-
-# print(req)
