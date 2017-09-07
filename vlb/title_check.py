@@ -35,38 +35,36 @@ report = Report('isbn check', 'VLB')
 medium = sys.argv[1]
 promotion = sys.argv[2]
 year = sys.argv[3]
-# print(medium+' '+promotion+' '+year)
-
 
 filename = medium + '_' + promotion + '_' + year + '.xlsx'
 print(filename)
 
 # data = get_sheetdata('dataset\\'+filename)
-
 # count = data.max_row
 
 log_count = 0
 
 log = open('results\\simple_log.txt', 'w')
-log.write('%s\t%s\n' % ('Item logged', 'Code'))
+log.write('%s\t%s\t%s\t%s\n' % ('Item logged', 'Code', 'Log time', 'Log date'))
 
 worksheets = get_worksheets('dataset\\'+filename)
 
 for data in worksheets:
 	count = data.max_row
-	
+	# range is to, not including the upper limit
+	count = count + 1
 	for n in range(2, count):
 		log_count += 1
-		print(log_count)		
+		log_date = time.strftime("%d:%m:%y")
+		log_time = time.strftime("%I:%M:%S")
+		print(log_count, end=': ')
+		print(log_time)		
 		item = BFLUXItem(data, n)
 		product_data = get_product_data(item.isbn)
 		print(product_data['code'])
-		log.write('%s\t%s\n' % (log_count, product_data['code']))
+		log.write('%s\t%s\t%s\t%s\n' % (log_count, product_data['code'], log_time, log_date))
 		book = Product(product_data)
-		report.generate(n, item, book)
-
-	log_count += 1
-	log.write('%s\t%s\n' % (log_count, '200'))
+		report.generate(n, item, book)	
 
 print_date = time.strftime("%d%m%y")
 print_time = time.strftime("%I%M%S")
