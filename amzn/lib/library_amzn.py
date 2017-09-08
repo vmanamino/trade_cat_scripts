@@ -18,28 +18,40 @@ amzn_key = os.environ['AMZN_DE_ACCESS_KEY']
 assoc_tag = os.environ['AMZN_ASSOC_TAG']
 
 
+item_id = '9783476043306'
+
+# create timestamp
 date_time = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 
 date_time = urllib.parse.quote(date_time, safe='')
 print(date_time)
 
-item_id = '9783476043306'
 
+# string to sign
 s = ('http://webservices.amazon.de/onca/xml?AWSAccessKeyId='+amzn_id+'&AssociateTag='+assoc_tag+'&ContentType'
 '=&IdType=ISBN&ItemId='+item_id+'&Operation=ItemLookup&ResponseGroup=OfferSummary&SearchIndex=Books&Service=AWSECommerceService&'
 'Timestamp='+date_time)
 
+# break string into pairs of param and value
 pairs = s.split('?')
 del pairs[0]
 pairs = pairs[0].split('&')
+
+# sort the pairs based on binary values
 pairs.sort()
 
+
+# join pairs again into a string
 s = "&".join(pairs)
+
+# begin building the request
 verb = 'GET\n'
 domain = 'webservices.amazon.de\n'
 expression = '/onca/xml\n'
 to_be_prepended = verb + domain + expression
 s_to_send = to_be_prepended + s
+
+# 
 s_to_send = bytes(s_to_send, 'utf-8')
 amzn_key = bytes(amzn_key, 'utf-8')
 digest = hmac.new(amzn_key, msg=s_to_send, digestmod=hashlib.sha256).digest()
