@@ -4,3 +4,8 @@ import os
 os.environ['VLB_TOKEN_MMO'] = ''
 os.environ['VLB_TOKEN_METADATA'] = ''
 os.environ['VLB_TOKEN_COVER'] = ''
+
+# Amazon entry requirements
+os.environ['AMZN_DE_ACCESS_ID'] = ''
+os.environ['AMZN_DE_ACCESS_KEY'] = ''
+os.environ['AMZN_ASSOC_TAG'] = ''
