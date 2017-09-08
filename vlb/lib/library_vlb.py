@@ -9,15 +9,14 @@ import urllib.request
 import datetime
 # import pickle
 
-metadata_token = os.environ['VLB_TOKEN_METADATA']
-
 def get_product_data(isbn):
 
 	url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'
-	return response_dict(get_request(url))	
+	return response_dict(get_request(url))
 
 def add_headers(request):
 	
+	metadata_token = os.environ['VLB_TOKEN_METADATA']
 	request.add_header('Authorization', 'Bearer '+metadata_token)
 	request.add_header('Content-Type', 'application/json')
 	request.add_header('Accept', 'application/json')
