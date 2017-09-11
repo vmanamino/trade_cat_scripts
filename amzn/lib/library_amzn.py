@@ -4,13 +4,17 @@ import hmac
 import hashlib
 import base64
 from hashlib import sha256
+import aiohttp
+import asyncio
+import async_timeout
+import requests
 import os
 import sys
 # append path to keys for import
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
-import urllib
-import urllib.request
+# import urllib
+# import urllib.request
 from urllib.parse import urlencode, quote_plus
 from xml.etree import cElementTree as xmlDoc
 
@@ -25,14 +29,21 @@ operation = 'ItemLookup'
 responseGroup = 'OfferSummary'
 searchIndex = 'Books'
 
-def get_amzn_request(url):
+# def get_amzn_request(url):
 
-    request = urllib.request.Request(url)
-    try:
-    	return urllib.request.urlopen(request)
-    except urllib.request.HTTPError as err:
-    	return err
+#     request = urllib.request.Request(url)
+#     try:
+#     	return urllib.request.urlopen(request)
+#     except urllib.request.HTTPError as err:
+#     	return err
 
+async def main():
+	loop = asyncio.get_event_loop()
+	future1 = loop.run_in_executor(None, requests.get, get_amzn_product_data(item_id, responseGroup))
+	future2 = loop.run_in_executor(None, requests.get, get_amzn_product_data(item_id, 'Images'))
+	response1 = await future1
+	response2 = await future2
+    
 
 def get_amzn_product_data(isbn, data_point):
 
@@ -125,7 +136,7 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # url = create_autographed_url(s_to_send, signature_param_value) # ok
 
-print(get_amzn_product_data(item_id, responseGroup))
+# print(get_amzn_product_data(item_id, responseGroup))
 # root = xmlDoc.parse(get_amzn_product_data(item_id, responseGroup)).getroot()
 # data = xmlDoc.fromstring(get_amzn_product_data(item_id, responseGroup).read())
 # print(data[1])
@@ -137,3 +148,5 @@ print(get_amzn_product_data(item_id, responseGroup))
 # for element in root.iter('*'):
 # 	print(element.tag)
 
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
