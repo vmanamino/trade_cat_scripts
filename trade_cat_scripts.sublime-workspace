@@ -1,0 +1,671 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"response",
+				"response3"
+			],
+			[
+				"future",
+				"future3"
+			],
+			[
+				"respo",
+				"response2"
+			],
+			[
+				"xml",
+				"xmlDoc"
+			],
+			[
+				"get",
+				"get_amzn_product_data"
+			],
+			[
+				"create",
+				"create_prefixes"
+			],
+			[
+				"si",
+				"signature_param_value"
+			],
+			[
+				"sig",
+				"signature_param_value"
+			],
+			[
+				"signature_",
+				"signature_url_encoded"
+			],
+			[
+				"s_",
+				"s_to_send"
+			],
+			[
+				"url",
+				"url_request"
+			],
+			[
+				"htt",
+				"http_prefix"
+			],
+			[
+				"s",
+				"s_to_send"
+			],
+			[
+				"to",
+				"to_be_prepended"
+			],
+			[
+				"date",
+				"date_time"
+			],
+			[
+				"time",
+				"time_stamp"
+			],
+			[
+				"log",
+				"log_date"
+			],
+			[
+				"par",
+				"param_vals_bytes"
+			],
+			[
+				"m",
+				"my_list_sorted"
+			],
+			[
+				"my",
+				"my_list"
+			],
+			[
+				"q",
+				"quote_plus"
+			],
+			[
+				"am",
+				"amzn_key"
+			],
+			[
+				"pa",
+				"payload"
+			],
+			[
+				"req",
+				"req_encoded"
+			],
+			[
+				"key",
+				"key_as_bytes"
+			],
+			[
+				"amzn",
+				"amzn_key"
+			],
+			[
+				"ge",
+				"generate"
+			],
+			[
+				"loa",
+				"load_workbook"
+			],
+			[
+				"lib",
+				"library_vlb"
+			],
+			[
+				"work",
+				"worksheet"
+			],
+			[
+				"sp",
+				"special_tags4"
+			],
+			[
+				"spe",
+				"special_tags3"
+			],
+			[
+				"w",
+				"word_count"
+			],
+			[
+				"count",
+				"count_summ"
+			],
+			[
+				"spec",
+				"special_tags"
+			],
+			[
+				"usp",
+				"usp_length"
+			],
+			[
+				"ups",
+				"usp_input2"
+			],
+			[
+				"special",
+				"special_tags3"
+			],
+			[
+				"post",
+				"post_data"
+			],
+			[
+				"speci",
+				"special_tags2"
+			],
+			[
+				"pre",
+				"pre_data"
+			],
+			[
+				"br",
+				"brTag"
+			],
+			[
+				"html",
+				"html_total"
+			],
+			[
+				"mark",
+				"market_dach_col"
+			],
+			[
+				"market",
+				"market_row_col"
+			],
+			[
+				"mar",
+				"market_us"
+			],
+			[
+				"isb",
+				"isbn_col"
+			],
+			[
+				"column",
+				"column_number"
+			],
+			[
+				"colu",
+				"column_number"
+			],
+			[
+				"empt",
+				"empty_null"
+			],
+			[
+				"usps",
+				"usps_parsed"
+			],
+			[
+				"div",
+				"divTag_wrap"
+			],
+			[
+				"n",
+				"n_usps"
+			],
+			[
+				"n_row",
+				"n_row_input2"
+			],
+			[
+				"row",
+				"n_row_overview"
+			],
+			[
+				"divTag",
+				"divTag_wrap_target"
+			],
+			[
+				"pTag",
+				"pTag_target"
+			],
+			[
+				"di",
+				"divTag_one_less"
+			],
+			[
+				"p",
+				"pTag_one_less"
+			],
+			[
+				"av",
+				"availability_desc"
+			],
+			[
+				"avai",
+				"availability"
+			],
+			[
+				"avail",
+				"avail_code_desc"
+			],
+			[
+				"ava",
+				"avail_code"
+			],
+			[
+				"price",
+				"price_CH"
+			],
+			[
+				"product",
+				"product_data"
+			],
+			[
+				"dach",
+				"dach_prices"
+			],
+			[
+				"flag",
+				"flag_at"
+			],
+			[
+				"B",
+				"BFLUXItem"
+			],
+			[
+				"pro",
+				"product_error"
+			],
+			[
+				"da",
+				"dach_prices"
+			],
+			[
+				"test",
+				"test_pickle"
+			],
+			[
+				"data",
+				"data_dict"
+			],
+			[
+				"add",
+				"add_header"
+			],
+			[
+				"li",
+				"liTag_divWrapped_target"
+			],
+			[
+				"tag",
+				"tag_content"
+			],
+			[
+				"a",
+				"assertFalse"
+			],
+			[
+				"fail",
+				"failIf"
+			],
+			[
+				"unit",
+				"unittest"
+			],
+			[
+				"out",
+				"outsheet_full"
+			],
+			[
+				"file",
+				"file_parts"
+			],
+			[
+				"col",
+				"col_num_two"
+			],
+			[
+				"input",
+				"input2"
+			],
+			[
+				"co",
+				"col_num_one"
+			],
+			[
+				"col_num",
+				"col_num_two"
+			],
+			[
+				"counter_",
+				"counter_row"
+			],
+			[
+				"_",
+				"_get_column_letter"
+			],
+			[
+				"she",
+				"sheet_ranges"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 173.0,
+		"last_filter": "virtual",
+		"selected_items":
+		[
+			[
+				"virtual",
+				"Virtualenv: Activate"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"git",
+				"Git: Status"
+			],
+			[
+				"packa",
+				"Package Control: Add Repository"
+			],
+			[
+				"",
+				"Build With: Python"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"commit",
+				"git: quick commit"
+			],
+			[
+				"stat",
+				"git: status"
+			],
+			[
+				"add",
+				"git: add (edit)"
+			],
+			[
+				"branc",
+				"git: push to branch name"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 232.0,
+		"history":
+		[
+			"python",
+			"python usps.py myfirst",
+			"if row is 1: print('hi')",
+			"if row is 1:",
+			"row = 1",
+			"print('hi')",
+			"python",
+			"pythoon",
+			"row",
+			"if row == 0",
+			"if row is 0:",
+			"if row == 0:",
+			"row",
+			"row = 0",
+			"python -m pip install openpyxl",
+			"git branch",
+			"git init",
+			"git status",
+			"ls",
+			"git add .",
+			"touch test",
+			"touch test.py",
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/C/Code/trade_cat_scripts/trade_cat_scripts.sublime-project",
+		"/C/Code/trade_cat_scripts/amzn/lib/library_amzn.py",
+		"/C/Code/uspChecks/library/usp_parser.py",
+		"/C/Code/uspChecks/usps.py",
+		"/C/Code/trade_cat_scripts/vlb/title_check.py",
+		"/C/Code/trade_cat_scripts/amzn/title_check_amzn.py",
+		"/C/Code/trade_cat_scripts/vlb/results/simple_log.txt",
+		"/C/Code/trade_cat_scripts/keys.py",
+		"/C/Code/trade_cat_scripts/vlb/lib/library_vlb.py",
+		"/C/Code/trade_cat_scripts/lib/library_common.py",
+		"/C/Code/trade_cat_scripts/vlb/simple_log.txt",
+		"/C/Code/uspChecks/library/html_tags.py",
+		"/C/Code/uspChecks/tests/parsing_tests.py",
+		"/C/Code/trade_cat_scripts/lib/report.py",
+		"/C/Code/trade_cat_scripts/tests/bflux_item_test.py",
+		"/C/Code/trade_cat_scripts/tests/product_vlb_test.py",
+		"/C/Code/trade_cat_scripts/lib/bflux_item.py",
+		"/C/Code/trade_cat_scripts/tests/report_test.py",
+		"/C/Code/trade_cat_scripts/vlb/lib/product.py",
+		"/C/Code/trade_cat_scripts/tests/product_vlb.py",
+		"/C/Code/trade_cat_scripts/vlb/lib/library.py",
+		"/C/Code/trade_cat_scripts/lib/library.py",
+		"/C/Code/trade_cat_scripts/vlb/results/results.txt",
+		"/C/Code/trade_cat_scripts/vlb/dataset/dataset.txt",
+		"/C/Code/trade_cat_scripts/.gitignore",
+		"/C/Code/trade_cat_scripts/tests/dataset/vlb_response_dict.txt",
+		"/C/Code/trade_cat_scripts/tests/dataset/test_dict.txt",
+		"/C/Code/trade_cat_scripts/tests/dataset/vlb_test_pickle.text",
+		"/C/Code/trade_cat_scripts/vlb/lib/vlb_response_dict.txt",
+		"/C/Code/trade_cat_scripts/vlb/lib/vlb_json_test.json",
+		"/C/Code/trade_cat_scripts/vlb/lib/record.py",
+		"/C/Code/trade_cat_scripts/keys_example.txt",
+		"/C/Code/trade_cat_scripts/README.md",
+		"/C/Code/trade_cat_scripts/test.py",
+		"/C/Code/uspChecks/library/usp.py",
+		"/C/Code/uspChecks/library/sheet_data.py",
+		"/C/Code/uspChecks/uspOne.py",
+		"/C/Code/uspChecks/library/html_parser.py",
+		"/C/Code/uspChecks/tests/regexs_tests.py",
+		"/C/Code/uspChecks/library/regexs.py",
+		"/C/Code/uspChecks/dups.py",
+		"/C/Code/uspChecks/library/sheetData.py",
+		"/C/Code/uspChecks/read.py",
+		"/C/Code/uspChecks/library/sheetInfo.py",
+		"/C/Code/uspChecks/.gitignore",
+		"/C/Code/uspChecks/hello.py",
+		"/C/Code/uspChecks/dataset/message.txt",
+		"/C/Code/uspChecks/xSL_test.xlsx",
+		"/C/Code/test/hello.py",
+		"/C/Code/hello.py",
+		"/C/Users/vao1843/Code/hello.py",
+		"/C/Users/vao1843/Code/hello.rb",
+		"/C/Users/vao1843/hello.py",
+		"/C/Users/vao1843/Downloads/code_snippets-master.zip",
+		"/C/Program Files/Sublime Text 3/Packages/ActionScript.sublime-package"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"6500",
+			"65000",
+			"9783658147747",
+			"':''}",
+			"n_row_full",
+			"data[",
+			"product[",
+			"tag_count",
+			"n_row",
+			"outsheet",
+			"dynamic"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"row_n",
+			"1",
+			"product[",
+			"data[",
+			"tag_content",
+			"n_row_full",
+			"outsheet_full"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 253.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 262.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Virtualenv/Python + Virtualenv.sublime-build",
+	"project": "trade_cat_scripts.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 559.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

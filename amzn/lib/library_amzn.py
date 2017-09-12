@@ -1,22 +1,23 @@
 import datetime
+import requests
 # import time
 import hmac
 import hashlib
 import base64
 from hashlib import sha256
-import aiohttp
 import asyncio
+import aiohttp
 import async_timeout
-import requests
 import os
 import sys
 # append path to keys for import
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
-# import urllib
+import urllib
 # import urllib.request
 from urllib.parse import urlencode, quote_plus
-from xml.etree import cElementTree as xmlDoc
+from xml.etree.ElementTree import parse
+from xml.dom import minidom
 
 sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
 # from library_common import response_dict
@@ -29,23 +30,26 @@ operation = 'ItemLookup'
 responseGroup = 'OfferSummary'
 searchIndex = 'Books'
 
-# def get_amzn_request(url):
+async def amzn_request(url):
 
-#     request = urllib.request.Request(url)
-#     try:
-#     	return urllib.request.urlopen(request)
-#     except urllib.request.HTTPError as err:
-#     	return err
+    request = urllib.request.Request(url)
+    try:
+    	# add timeout
+    	return urllib.request.urlopen(request)
+    except urllib.request.HTTPError as err:
+    	return err
 
-async def main():
+def get_amzn_product_data(item_id):		
+
 	loop = asyncio.get_event_loop()
-	future1 = loop.run_in_executor(None, requests.get, get_amzn_product_data(item_id, responseGroup))
-	future2 = loop.run_in_executor(None, requests.get, get_amzn_product_data(item_id, 'Images'))
-	response1 = await future1
-	response2 = await future2
+	amzn_data = loop.run_until_complete(asyncio.gather(
+		amzn_request(get_amzn_url(item_id, 'OfferSummary')),
+		amzn_request(get_amzn_url(item_id, 'Images')),
+		amzn_request(get_amzn_url(item_id, 'OfferListings')),
+		amzn_request(get_amzn_url(item_id, 'ItemAttributes'))))
+	return amzn_data	
     
-
-def get_amzn_product_data(isbn, data_point):
+def get_amzn_url(isbn, data_point):
 
 	s = create_string(isbn, data_point)
 	pairs = create_pairs(s)
@@ -148,5 +152,70 @@ def create_autographed_url(s_to_send, signature_param_value):
 # for element in root.iter('*'):
 # 	print(element.tag)
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+# loop = asyncio.get_event_loop()
+# loop.run_until_complete(asyncio.gather(main(item_id)))
+
+# print(get_amzn_product_data(item_id, 'OfferListings'))
+
+data = get_amzn_product_data(item_id)
+
+avail_flag = None
+title_flag = None
+price_flag = None
+image_flag = None
+
+api_case_price = 1
+api_case_images = 2
+api_case_avail = 3
+api_case_title = 4
+
+api_case_count = 0
+
+for datum in data:
+	api_case_count += 1
+	if api_case_count is 1:
+		pass
+	if api_case_count is 2:
+		pass
+	if api_case_count is 3:
+		pass
+	if api_case_count is 4:
+		pass
+	print(datum.status)
+	count = 0
+	doc = parse(datum)
+	doc_root = doc.getroot()
+	print(doc_root.tag)
+	for parent in doc_root:
+		print('parent', end=': ')
+		print(parent.tag)
+		for child in parent:
+			count += 1
+			if count is 3: # Arguments, below iterate through each argument
+				for grandchild in child:					
+					name = grandchild.attrib['Name']
+					if name == 'ResponseGroup':
+						value = grandchild.attrib['Value']
+						print(name)
+						print(value)
+						if value == 'OfferSummary':
+							print('Prices')
+							price_flag = True
+						if value == 'OfferListings':
+							print('Availability')
+							avail_flag = True
+						if value == 'ItemAttributes':
+							print('Title info')
+							title_flag = True
+						if value == 'Images':
+							print('Covers')
+							image_flag = True
+
+		
+
+
+# def get_data()
+	# for elements in doc.iterfind('{http://webservices.amazon.com/AWSECommerceService/2011-08-01}ItemLookupResponse'):
+		
+# print(get_amzn_url(item_id, 'OfferSummary'))
+	
