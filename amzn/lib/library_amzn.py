@@ -30,6 +30,25 @@ operation = 'ItemLookup'
 responseGroup = 'OfferSummary'
 searchIndex = 'Books'
 
+
+# called only on status success
+def get_amzn_product_data(value, responseGroup_items):
+	if value == 'OfferSummary':
+		print('get amazon price data')
+		
+	if value == 'OfferListings':
+		print('get amazon availability data')		
+		
+	if value == 'ItemAttributes':
+		print('get amazon title data')
+		for parent in responseGroup_items:
+			print('item attrs')
+			print(parent.tag)
+
+		
+	if value == 'Images':
+		print('get amazon image data')
+
 async def amzn_request(url):
 
     request = urllib.request.Request(url)
@@ -39,7 +58,7 @@ async def amzn_request(url):
     except urllib.request.HTTPError as err:
     	return err
 
-def get_amzn_product_data(item_id):		
+def gather_amzn_responses(item_id):		
 
 	loop = asyncio.get_event_loop()
 	amzn_data = loop.run_until_complete(asyncio.gather(
@@ -157,7 +176,11 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # print(get_amzn_product_data(item_id, 'OfferListings'))
 
-data = get_amzn_product_data(item_id)
+# get amazon product report data
+
+print(get_amzn_url(item_id, "ItemAttributes"))
+
+data = gather_amzn_responses(item_id)
 
 avail_flag = None
 title_flag = None
@@ -171,47 +194,90 @@ api_case_title = 4
 
 api_case_count = 0
 
+ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 for datum in data:
-	api_case_count += 1
-	if api_case_count is 1:
-		pass
-	if api_case_count is 2:
-		pass
-	if api_case_count is 3:
-		pass
-	if api_case_count is 4:
-		pass
 	print(datum.status)
-	count = 0
 	doc = parse(datum)
 	doc_root = doc.getroot()
-	print(doc_root.tag)
-	for parent in doc_root:
-		print('parent', end=': ')
-		print(parent.tag)
-		for child in parent:
-			count += 1
-			if count is 3: # Arguments, below iterate through each argument
-				for grandchild in child:					
-					name = grandchild.attrib['Name']
-					if name == 'ResponseGroup':
-						value = grandchild.attrib['Value']
-						print(name)
-						print(value)
-						if value == 'OfferSummary':
-							print('Prices')
-							price_flag = True
-						if value == 'OfferListings':
-							print('Availability')
-							avail_flag = True
-						if value == 'ItemAttributes':
-							print('Title info')
-							title_flag = True
-						if value == 'Images':
-							print('Covers')
-							image_flag = True
+	for elem in doc_root.findall('aws:Items', ns):
+		print(elem.tag)
 
+
+# # def parse_amzn_responses
+# for datum in data:
+# 	# api_case_count += 1
+# 	# if api_case_count is 1:
+# 	# 	pass
+# 	# if api_case_count is 2:
+# 	# 	pass
+# 	# if api_case_count is 3:
+# 	# 	pass
+# 	# if api_case_count is 4:
+# 	# 	pass
+
+# 	# make conditional on status, error or success
+# 	print(datum.status)
+# 	count = 0
+# 	doc = parse(datum)
+# 	doc_root = doc.getroot()
+# 	print(doc_root.tag)
+# 	for index, parent in enumerate(doc_root):
+# 		print('parent', end=': ')
+# 		print(parent.tag)
+# 		for child in parent:
+# 			count += 1
+# 			if count is 3: # Arguments, below iterate through each argument
+# 				for grandchild in child:					
+# 					name = grandchild.attrib['Name']
+# 					if name == 'ResponseGroup':
+# 						value = grandchild.attrib['Value']
+# 						print(name)
+# 						print(value)
+# 						if value == 'OfferSummary':
+# 							print('Prices')
+# 							price_flag = True
+# 							print('Price/OfferSummary next tag', end=': ')
+# 							responseGroup_items = doc_root[index +1]
+# 							print(responseGroup_items)
+# 							get_amzn_product_data(value, responseGroup_items)
+# 						if value == 'OfferListings':
+# 							print('Availability')
+# 							avail_flag = True
+# 							print('Availability/OfferListings next tag', end=': ')
+# 							responseGroup_items = doc_root[index +1]
+# 							print(responseGroup_items)
+# 							get_amzn_product_data(value, responseGroup_items)
+# 						if value == 'ItemAttributes':
+# 							print('Title info')
+# 							title_flag = True
+# 							print('Title info/ItemAttributes next tag', end=': ')
+# 							responseGroup_items = doc_root[index +1]
+# 							print(responseGroup_items)
+# 							get_amzn_product_data(value, responseGroup_items)
+# 						if value == 'Images':
+# 							print('Covers')
+# 							image_flag = True
+# 							print('Covers/Images next tag', end=': ')
+# 							responseGroup_items = doc_root[index +1]
+# 							print(responseGroup_items)
+# 							get_amzn_product_data(value, responseGroup_items)
+
+
+# called only on status success
+def get_amzn_product_data(value, responseGroup_items):
+	if value == 'OfferSummary':
+		print('get amazon price data')
 		
+	if value == 'OfferListings':
+		print('get amazon availability data')
+		
+	if value == 'ItemAttributes':
+		print('get amazon title data')
+		
+	if value == 'Images':
+		print('get amazon image data')
+		
+
 
 
 # def get_data()
