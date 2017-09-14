@@ -50,9 +50,9 @@ def parse_amzn_responses(data):
 		# response count tracks specific response, needed to assign error code to dict key
 		response_count += 1
 		# check status success, or failure, on failure fill dict with appropriate message
-		# print(datum.status)
-		amzn_prod_dict['code'] = datum.status
+		# print(datum.status)		
 		if datum.status is 200:
+			print(datum.status)
 			doc = parse(datum)
 			doc_root = doc.getroot()
 			for elem in doc_root.findall('aws:OperationRequest', ns):
