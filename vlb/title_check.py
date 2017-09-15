@@ -43,7 +43,7 @@ print(filename)
 log_count = 0
 
 log = open('results\\simple_log.txt', 'w')
-log.write('%s\t%s\t%s\t%s\n' % ('Item logged', 'Code', 'Log time', 'Log date'))
+log.write('%s\t%s\t%s\t%s\t%s\n' % ('Item logged', 'Code', 'ISBN', 'Log time', 'Log date'))
 
 if option == 'workbook':
 	print(option)
@@ -63,7 +63,7 @@ if option == 'workbook':
 			item = BFLUXItem(data, n)
 			product_data = get_product_data(item.isbn)
 			print(product_data['code'])
-			log.write('%s\t%s\t%s\t%s\n' % (log_count, product_data['code'], log_time, log_date))
+			log.write('%s\t%s\t%s\t%s\t%s\n' % (log_count, product_data['code'], item.isbn, log_time, log_date))
 			book = Product(product_data)
 			report.generate(n, item, book)
 

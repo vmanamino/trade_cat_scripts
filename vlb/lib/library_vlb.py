@@ -5,9 +5,13 @@ import sys
 # append path to keys for import
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
+import socket
 import urllib.request
 import datetime
 # import pickle
+
+timeout = 10
+socket.setdefaulttimeout(timeout)
 
 def get_product_data(isbn):
 
@@ -28,7 +32,7 @@ def get_request(url):
     try:
     	return urllib.request.urlopen(request)
     except urllib.request.HTTPError as err:
-    	return err    	
+    	return err       
 	
 def response_dict(response):
 

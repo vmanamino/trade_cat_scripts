@@ -59,7 +59,8 @@ elif option == 'spreadsheet':
 	print(count)
 	# range is to, not including the upper limit
 	count = count + 1
-	for n in range(2, 20):
+	for n in range(2, count):
+		time.sleep(10)
 		log_count += 1
 		log_date = time.strftime("%d:%m:%y")
 		log_time = time.strftime("%I:%M:%S")
@@ -74,6 +75,6 @@ elif option == 'spreadsheet':
 print_date = time.strftime("%d%m%y")
 print_time = time.strftime("%I%M%S")
 
-report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
+report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
 report.save('results\\'+report_name)
 log.close()

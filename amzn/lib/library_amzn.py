@@ -13,13 +13,16 @@ import sys
 # append path to keys for import
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
+import socket
 import urllib
 # import urllib.request
 from urllib.parse import urlencode, quote_plus
 from xml.etree.ElementTree import parse
 from xml.dom import minidom
 
+
 sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
+ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # from library_common import response_dict
 
 # amazon xml namespace for parsing xml doc
@@ -37,18 +40,23 @@ sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
 # 	pass
 
 def collate_amzn_data(item_id): # add other attributes of amzn prod.
-	data = gather_amzn_responses(item_id)
-	amzn_prod_info = parse_amzn_responses(data)
+	print('caled')
+	data = gather_amzn_responses(item_id)	
+	amzn_prod_info = parse_amzn_responses(data, item_id)
+	print('this is my prod info')
+	print(amzn_prod_info)
 	return amzn_prod_info
 
-def parse_amzn_responses(data): 
-	ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
-	amzn_prod_dict = {'code': '', 'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
+def parse_amzn_responses(data, item_id): 	
+	amzn_prod_dict = {'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
 	response_count = 0
 	# print(len(data))
 	for datum in data:
+
 		# response count tracks specific response, needed to assign error code to dict key
 		response_count += 1
+		# print(response_count)
+		# print(amzn_prod_dict)
 		# check status success, or failure, on failure fill dict with appropriate message
 		# print(datum.status)		
 		if datum.status is 200:
@@ -65,20 +73,23 @@ def parse_amzn_responses(data):
 						arg_val = arg.get('Value')					
 						if arg_val == 'OfferSummary':
 							for children in doc_root.findall('aws:Items', ns):
-								child = children.find('aws:Item', ns)
-								if 	child.find('aws:OfferSummary', ns):		
-									progeny = child.find('aws:OfferSummary', ns)
-									if progeny.find('aws:LowestNewPrice', ns):
-										price_wrapper = progeny.find('aws:LowestNewPrice', ns)
-										if price_wrapper.find('aws:FormattedPrice', ns):
-											price_info = price_wrapper.find('aws:FormattedPrice', ns)
-											amzn_prod_dict['price_info'] = price_info.text
+								if children.find('aws:Item', ns) is not None:
+									child = children.find('aws:Item', ns)
+									if 	child.find('aws:OfferSummary', ns):		
+										progeny = child.find('aws:OfferSummary', ns)
+										if progeny.find('aws:LowestNewPrice', ns):
+											price_wrapper = progeny.find('aws:LowestNewPrice', ns)
+											if price_wrapper.find('aws:FormattedPrice', ns) is not None:
+												price_info = price_wrapper.find('aws:FormattedPrice', ns)																						
+												amzn_prod_dict['price_info'] = price_info.text[4:]
+											else:
+												amzn_prod_dict['price_info'] = 'None'
 										else:
 											amzn_prod_dict['price_info'] = 'None'
 									else:
 										amzn_prod_dict['price_info'] = 'None'
 								else:
-									amzn_prod_dict['price_info'] = 'None'								
+									amzn_prod_dict['price_info'] = 'None'							
 						if arg_val == 'OfferListings':
 							for children in doc_root.findall('aws:Items', ns):
 								child = children.find('aws:Item', ns)
@@ -90,7 +101,7 @@ def parse_amzn_responses(data):
 											offer_listing = offer.find('aws:OfferListing', ns)
 											if offer_listing.find('aws:AvailabilityAttributes', ns):
 												availability_attrs = offer_listing.find('aws:AvailabilityAttributes', ns)
-												if availability_attrs.find('aws:AvailabilityType', ns):
+												if availability_attrs.find('aws:AvailabilityType', ns) is not None:
 													availability = availability_attrs.find('aws:AvailabilityType', ns)
 													amzn_prod_dict['availability'] = availability.text
 												else:
@@ -106,33 +117,28 @@ def parse_amzn_responses(data):
 
 						if arg_val == 'Images':
 							for children in doc_root.findall('aws:Items', ns):
-								child = children.find('aws:Item', ns)
-								if child.find('aws:MediumImage', ns):
-									progeny = child.find('aws:MediumImage', ns)
-									url = progeny.find('aws:URL', ns)
-									amzn_prod_dict['cover_info'] = url.text
-								else:
-									amzn_prod_dict['cover_info'] = 'No cover'
+								if children.find('aws:Item', ns):
+									child = children.find('aws:Item', ns)
+									if child.find('aws:MediumImage', ns):
+										progeny = child.find('aws:MediumImage', ns)
+										if progeny.find('aws:URL', ns) is not None:
+											url = progeny.find('aws:URL', ns)
+											amzn_prod_dict['cover_info'] = url.text
+										else:
+											amzn_prod_dict['cover_info'] = 'None'
+									else:
+										amzn_prod_dict['cover_info'] = 'No cover'
 							
 						if arg_val == 'ItemAttributes':
+							isbns = []
 							for children in doc_root.findall('aws:Items', ns):
 								child = children.find('aws:Item', ns)
-								if child.find('aws:ItemAttributes', ns):
-									progeny = child.find('aws:ItemAttributes', ns)
-									if progeny.find('aws:EAN', ns):
-										isbn = progeny.find('aws:EAN', ns)
-										amzn_prod_dict['isbn'] = isbn.text
-										if progeny.find('aws:Title', ns):
-											title = progeny.find('aws:Title', ns)
-											amzn_prod_dict['title_info'] = title.text
-										else:
-											amzn_prod_dict['title_info'] = 'None'
-									else:
-										amzn_prod_dict['isbn'] = 'None'
-										amzn_prod_dict['title_info'] = 'None'
-								else:
-									amzn_prod_dict['isbn'] = 'None'
-									amzn_prod_dict['title_info'] = 'None'								
+								grandchildren = children.findall('aws:Item', ns)
+								print('# of grandchildren', end=': ')
+								print(len(grandchildren))								
+								title, isbn = get_item_attrs(grandchildren, item_id)
+								amzn_prod_dict['isbn'] = isbn
+								amzn_prod_dict['title_info'] = title											
 		else:
 			msg = None
 			if datum.status:
@@ -145,10 +151,45 @@ def parse_amzn_responses(data):
 				amzn_prod_dict['cover_info'] = msg
 			if response_count is 4:
 				amzn_prod_dict['isbn'] = msg
-				amzn_prod_dict['title_info'] = msg			
-	print('product dict', end=': ')
+				amzn_prod_dict['title_info'] = msg		
 	print(amzn_prod_dict)
 	return amzn_prod_dict
+
+def get_item_attrs(elements, item_id):	
+	isbn = ''
+	title = ''
+	for each in elements:									
+		if each.find('aws:ItemAttributes', ns):									
+			progeny = each.find('aws:ItemAttributes', ns)									
+			if progeny.find('aws:EAN', ns) is not None or progeny.find('aws:EISBN', ns) is not None:
+				if progeny.find('aws:EAN', ns) is not None:																
+					isbn_to_check = progeny.find('aws:EAN', ns)
+					if isbn_to_check.text == item_id:
+						isbn = isbn_to_check.text						
+						if progeny.find('aws:Title', ns) is not None:							
+							title = progeny.find('aws:Title', ns)
+							title = title.text								
+						else:
+							title = 'None'
+						return title, isbn					
+				if progeny.find('aws:EISBN', ns) is not None:					
+					isbn_to_check = progeny.find('aws:EISBN', ns)
+					if isbn_to_check.text == item_id:
+						isbn = isbn_to_check.text
+						if progeny.find('aws:Title', ns) is not None:
+							title = progeny.find('aws:Title', ns)
+							title = title.text							
+						else:
+							title = 'None'						
+						return isbn, title
+			else:
+				isbn = 'None'
+				title = 'None'
+				return title, isbn
+		else:
+			isbn = 'None'
+			title = 'None'
+			return title, isbn
 
 async def amzn_request(url):
 
@@ -264,7 +305,24 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9783319661391', "Images"))
 
 # collate_amzn_data(item_id)
-print(get_amzn_url('9783540766148', 'OfferListings'))
-print(collate_amzn_data('9781603272360'))
+# print(get_amzn_url('9788847057661', 'Images'))
 
-	
+# this PRINT isbn has several items on amazon 9783662463727 and has EISBN for Kindle Versions 
+# print(collate_amzn_data('9783662463727'))
+# print(get_amzn_url('9783662463727', 'ItemAttributes'))
+
+# this is an actual eisbn 9783662463734
+# print(collate_amzn_data('9783662463734'))
+# print(get_amzn_url('9783662463734', 'Images'))
+
+# print isbn 9783662467862
+# print(collate_amzn_data('9783662467862'))
+
+# print isbn 9789462651227
+# print(collate_amzn_data('9783662451151'))
+
+# prices displayed not available in api response
+# print(get_amzn_url('9783642312199', 'OfferSummary'))
+
+# offersummary with no item
+# print(get_amzn_url('9783642361722', 'OfferSummary'))

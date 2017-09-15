@@ -13,12 +13,13 @@ class Report():
 	
 	def __init__(self, title, trader):
 
+		self.trader = trader
 		self.workbook, self.name = xlreport(title)
 		self.worksheet = self.workbook.active
 		self.report = create_headers(self.worksheet, trader)
 
 	def generate(self, row_n, bflux_item, book):
-		self.report = add_row(self.worksheet, row_n, bflux_item, book)
+		self.report = add_row(self.trader, self.worksheet, row_n, bflux_item, book)
 		# pass
 
 	# @staticmethod
