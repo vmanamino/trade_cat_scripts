@@ -14,6 +14,7 @@ import sys
 sys.path.append('C:\\Code\\trade_cat_scripts')
 import keys
 import socket
+import time
 import urllib
 # import urllib.request
 from urllib.parse import urlencode, quote_plus
@@ -209,7 +210,8 @@ def get_item_attrs(elements, item_id):
 			title = 'None'
 			return title, isbn
 
-async def amzn_request(url):
+# async def amzn_request(url):
+def amzn_request(url):
 
     request = urllib.request.Request(url)
     try:
@@ -220,13 +222,25 @@ async def amzn_request(url):
 
 def gather_amzn_responses(item_id):		
 
-	loop = asyncio.get_event_loop()
-	amzn_data = loop.run_until_complete(asyncio.gather(
-		amzn_request(get_amzn_url(item_id, 'OfferSummary')),
-		amzn_request(get_amzn_url(item_id, 'Images')),
-		amzn_request(get_amzn_url(item_id, 'OfferListings')),
-		amzn_request(get_amzn_url(item_id, 'ItemAttributes'))))
-	return amzn_data	
+	amzn_data = []
+
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferSummary')))
+	time.sleep(8)
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'Images')))
+	time.sleep(8)
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferListings')))
+	time.sleep(8)
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'ItemAttributes')))
+
+	return amzn_data
+
+	# loop = asyncio.get_event_loop()
+	# amzn_data = loop.run_until_complete(asyncio.gather(
+	# 	amzn_request(get_amzn_url(item_id, 'OfferSummary')),
+	# 	amzn_request(get_amzn_url(item_id, 'Images')),
+	# 	amzn_request(get_amzn_url(item_id, 'OfferListings')),
+	# 	amzn_request(get_amzn_url(item_id, 'ItemAttributes'))))
+	# return amzn_data	
     
 def get_amzn_url(isbn, data_point):
 
@@ -346,5 +360,8 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9783642361722', 'OfferSummary'))
 
 # 9783642361722 no offers
-print(get_amzn_url('9783642361722', 'OfferListings'))
+# print(get_amzn_url('9783642361722', 'OfferListings'))
 
+# print(gather_amzn_responses('9789462651227'))
+
+print(get_amzn_url('9783642450525', 'OfferListings'))

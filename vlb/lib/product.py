@@ -1,12 +1,12 @@
 from library_vlb import dach_prices, get_frontcover, avail_code_desc
+import json
 
 class Product():
 
 	def __init__(self, data):
 		
 		self.response_code = data['code']
-		product = data['content']
-		
+		product = content = json.loads(data['content'])
 		
 		if self.response_code == 200:				
 			self.id = product['id']
