@@ -59,7 +59,7 @@ elif option == 'spreadsheet':
 	print(count)
 	# range is to, not including the upper limit
 	count = count + 1
-	for n in range(2, count):
+	for n in range(2, 100):
 		time.sleep(10)
 		log_count += 1
 		log_date = time.strftime("%d:%m:%y")

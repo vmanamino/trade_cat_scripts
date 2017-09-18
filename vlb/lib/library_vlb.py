@@ -31,7 +31,7 @@ def get_request(url):
     request = add_headers(urllib.request.Request(url))
     try:
     	return urllib.request.urlopen(request)
-    except urllib.request.HTTPError as err:
+    except (socket.error, urllib.request.HTTPError) as err:
     	return err       
 	
 def response_dict(response):
