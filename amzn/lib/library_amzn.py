@@ -21,8 +21,9 @@ from urllib.parse import urlencode, quote_plus
 from xml.etree.ElementTree import parse
 from xml.dom import minidom
 
+timeout = 10
+socket.setdefaulttimeout(timeout)
 
-sys.path.append('C:\\Code\\trade_cat_scripts\\lib')
 ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # from library_common import response_dict
 
@@ -213,9 +214,15 @@ def amzn_request(url):
     request = urllib.request.Request(url)
     try:
     	# add timeout
-    	return urllib.request.urlopen(request)
+    	return urllib.request.urlopen(request, timeout=10)
     except urllib.request.HTTPError as err:
     	return err
+    except socket.timeout:
+    	print('socket timeout')
+    	print(socket.timeout)
+    except socket.error:
+    	print('socket error')
+    	print(socket.error)
 
 def gather_amzn_responses(item_id):		
 

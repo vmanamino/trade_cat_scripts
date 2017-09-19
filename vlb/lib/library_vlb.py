@@ -32,8 +32,12 @@ def get_request(url):
     request = add_headers(urllib.request.Request(url))
     try:
         return urllib.request.urlopen(request, timeout=10)
-    except (socket.error, socket.timeout, urllib.request.HTTPError) as err:
+    except urllib.request.HTTPError) as err:
         return err
+    except socket.timeout:
+        print('socket timeout')
+    except socket.error:
+        print('socket error')
 
 def response_dict(response):	
 	# return data_dict	
