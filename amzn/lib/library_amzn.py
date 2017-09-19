@@ -40,12 +40,9 @@ ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # 	# dict, imitate json
 # 	pass
 
-def collate_amzn_data(item_id): # add other attributes of amzn prod.
-	print('caled')
+def collate_amzn_data(item_id): # add other attributes of amzn prod.	
 	data = gather_amzn_responses(item_id)	
-	amzn_prod_info = parse_amzn_responses(data, item_id)
-	print('this is my prod info')
-	print(amzn_prod_info)
+	amzn_prod_info = parse_amzn_responses(data, item_id)	
 	return amzn_prod_info
 
 def parse_amzn_responses(data, item_id): 	
@@ -170,7 +167,7 @@ def parse_amzn_responses(data, item_id):
 				amzn_prod_dict['cover_info'] = msg
 			if response_count is 4:
 				amzn_prod_dict['isbn'] = msg
-				amzn_prod_dict['title_info'] = msg		
+				amzn_prod_dict['title_info'] = msg
 	print(amzn_prod_dict)
 	return amzn_prod_dict
 
@@ -224,12 +221,12 @@ def gather_amzn_responses(item_id):
 
 	amzn_data = []
 
-	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferSummary')))
-	time.sleep(8)
-	amzn_data.append(amzn_request(get_amzn_url(item_id, 'Images')))
-	time.sleep(8)
-	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferListings')))
-	time.sleep(8)
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferSummary')))	
+	time.sleep(8)	
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'Images')))	
+	time.sleep(8)	
+	amzn_data.append(amzn_request(get_amzn_url(item_id, 'OfferListings')))	
+	time.sleep(8)	
 	amzn_data.append(amzn_request(get_amzn_url(item_id, 'ItemAttributes')))
 
 	return amzn_data
@@ -364,4 +361,6 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # print(gather_amzn_responses('9789462651227'))
 
-print(get_amzn_url('9783642450525', 'OfferListings'))
+# print(get_amzn_url('9783642450525', 'OfferListings'))
+
+# print(collate_amzn_data('9783642450525'))

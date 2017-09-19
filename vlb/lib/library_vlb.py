@@ -39,7 +39,7 @@ def response_dict(response):
 	# return data_dict	
     try:    	
     	data = response.read()  	 	
-    except ValueError as e:    	
+    except ValueError:    	
         data_dict['code'] = 'resp format buggy'
         data_dict['content'] = 'resp format buggy'        
     else:
