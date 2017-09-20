@@ -6,7 +6,7 @@ class Product():
 	def __init__(self, data):
 		
 		self.response_code = data['code']
-		product = content = json.loads(data['content'])
+		product = json.loads(data['content'])
 		
 		if self.response_code == 200:				
 			self.id = product['id']

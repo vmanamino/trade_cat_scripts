@@ -41,6 +41,8 @@ def get_request(url):
         msg = 'socket timeout'
     except socket.error:
         msg = 'socket error'
+    except json.decoder.JSONDecodeError:
+        msg = 'json decode err'
     finally:
         return response, msg
 
@@ -261,4 +263,4 @@ def get_sheetdata(file):
 # with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_dach_prickes_pickle.txt', 'wb') as test_pickle:
         # pickle.dump(prices, test_pickle)
 
-
+# print(get_product_data('9783540356455'))
