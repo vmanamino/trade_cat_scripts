@@ -5,6 +5,8 @@ keys.py
 # possibly proprietary metadata
 dataset/*
 results/*
+vlb/results/*
+vlb/dataset/*
 tests/dataset/*
 tests/results/*
 *.xlsx
