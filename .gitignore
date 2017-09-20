@@ -8,4 +8,5 @@ results/*
 tests/dataset/*
 tests/results/*
 *.xlsx
+*.zip
 

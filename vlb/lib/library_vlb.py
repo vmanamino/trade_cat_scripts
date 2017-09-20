@@ -17,8 +17,9 @@ data_dict = {'code': '', 'content': ''}
 data = ''
 
 def get_product_data(isbn):    
-    url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'    
-    return response_dict(get_request(url))
+    url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'  
+    response, msg = get_request(url)  
+    return response_dict(response, msg)
 
 def add_headers(request):
     
@@ -30,30 +31,39 @@ def add_headers(request):
 
 def get_request(url):
     request = add_headers(urllib.request.Request(url))
+    response = 'no response'
+    msg = ''
     try:
-        return urllib.request.urlopen(request, timeout=10)
-    except urllib.request.HTTPError) as err:
-        return err
+        response = urllib.request.urlopen(request, timeout=10)        
+    except urllib.request.HTTPError as err:
+        response = err
     except socket.timeout:
-        print('socket timeout')
+        msg = 'socket timeout'
     except socket.error:
-        print('socket error')
+        msg = 'socket error'
+    finally:
+        return response, msg
 
-def response_dict(response):	
+def response_dict(response, msg):	
 	# return data_dict	
-    try:    	
-    	data = response.read()  	 	
-    except ValueError:    	
-        data_dict['code'] = 'resp format buggy'
-        data_dict['content'] = 'resp format buggy'        
+    if response != 'no response':
+        try:    	
+        	data = response.read()  	 	
+        except ValueError:    	
+            data_dict['code'] = 'resp JSON buggy'
+            data_dict['content'] = 'resp JSON buggy'        
+        else:
+        	data = data.decode('utf-8')
+        	data = json.loads(data)
+        	data = json.dumps(data)    	
+        	data_dict['code'] = response.status
+        	data_dict['content'] = data           
     else:
-    	data = data.decode('utf-8')
-    	data = json.loads(data)
-    	data = json.dumps(data)    	
-    	data_dict['code'] = response.status
-    	data_dict['content'] = data       
-    finally:    	
-    	return data_dict           
+        data_dict['code'] = msg
+        data_dict['content'] = response
+
+    return data_dict
+
 
     # # # test data    
     # # with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_test_pickle_error.txt', 'wb') as test_pickle:
