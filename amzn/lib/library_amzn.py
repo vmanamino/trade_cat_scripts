@@ -360,6 +360,8 @@ def create_autographed_url(s_to_send, signature_param_value):
 # prices displayed not available in api response
 # print(get_amzn_url('9783642312199', 'OfferSummary'))
 
+# print(get_amzn_url('9783662469149', 'Large'))
+
 # offersummary with no item
 # print(get_amzn_url('9783642361722', 'OfferSummary'))
 
@@ -368,6 +370,6 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # print(gather_amzn_responses('9789462651227'))
 
-# print(get_amzn_url('9783642450525', 'OfferListings'))
+print(get_amzn_url('9783662500330', 'OfferFull'))
 
 # print(collate_amzn_data('9783642450525'))

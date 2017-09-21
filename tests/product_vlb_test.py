@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\vlb\\lib')
 from product import Product
-
+import json
 
 with open('dataset\\vlb_test_pickle.txt', 'rb') as content:
 	data = pickle.load(content)

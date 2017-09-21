@@ -13,9 +13,6 @@ import datetime
 timeout = 10
 socket.setdefaulttimeout(timeout)
 
-data_dict = {'code': '', 'content': ''}
-data = ''
-
 def get_product_data(isbn):    
     url = 'http://api.vlb.de/api/v1/product/'+str(isbn)+'/isbn13'  
     response, msg = get_request(url)  
@@ -40,30 +37,32 @@ def get_request(url):
     except socket.timeout:
         msg = 'socket timeout'
     except socket.error:
-        msg = 'socket error'
-    except json.decoder.JSONDecodeError:
-        msg = 'json decode err'
+        msg = 'socket error'    
     finally:
         return response, msg
 
 def response_dict(response, msg):	
 	# return data_dict	
+    data_dict = {'code': '', 'content': ''}
+    data = ''
     if response != 'no response':
         try:    	
         	data = response.read()  	 	
         except ValueError:    	
-            data_dict['code'] = 'resp JSON buggy'
-            data_dict['content'] = 'resp JSON buggy'        
+            data_dict['code'] = 'resp format buggy'
+            data_dict['content'] = 'resp format buggy'
+        except json.decoder.JSONDecodeError:
+            data_dict['code'] = 'JSON could not be decoded'
+            data_dict['content'] = 'JSON could not be decoded'
         else:
         	data = data.decode('utf-8')
         	data = json.loads(data)
-        	data = json.dumps(data)    	
+        	data = json.dumps(data)
         	data_dict['code'] = response.status
-        	data_dict['content'] = data           
+        	data_dict['content'] = data
     else:
         data_dict['code'] = msg
-        data_dict['content'] = response
-
+        data_dict['content'] = response    
     return data_dict
 
 
@@ -115,30 +114,23 @@ def dach_prices(prices):
         
         if validFrom_str:
             day, month, year =  map(int, validFrom_str.split('.'))
-            validFrom = datetime.date(year, month, day)    
-
+            validFrom = datetime.date(year, month, day)
             if validTo_str:            
                 day, month, year =  map(int, validTo_str.split('.'))
-                validTo = datetime.date(year, month, day)        
-            
+                validTo = datetime.date(year, month, day)            
             if validFrom < today:
                 if validTo:                
                     if validTo > today:
-                        valid_price_date = True
-                        
+                        valid_price_date = True                        
                 else:                
                     valid_price_date = True
-                    
-
         elif validTo_str == None:        
-            valid_price_date = True        
-
+            valid_price_date = True
         else:            
             day, month, year =  map(int, validTo_str.split('.'))
             validTo = datetime.date(year, month, day)
             if validTo > today:            
                 valid_price_date = True
-
         # if the price has a valid date, then assign it to a country        
         if valid_price_date:
 
@@ -263,4 +255,7 @@ def get_sheetdata(file):
 # with open('C:\\Code\\trade_cat_scripts\\tests\\dataset\\vlb_dach_prickes_pickle.txt', 'wb') as test_pickle:
         # pickle.dump(prices, test_pickle)
 
+
+# product = Product(get_product_data('9783540356455'))
+# product.isbn
 # print(get_product_data('9783540356455'))

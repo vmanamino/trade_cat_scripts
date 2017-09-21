@@ -94,22 +94,4 @@ report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_da
 report.save('results\\'+report_name)
 log.close()
 
-# print(count)
-# for n in range(2, count):
-# 	print(n)
-# 	item = BFLUXItem(data, n)		
-# 	product_data = get_product_data(item.isbn)
-# 	book = Product(product_data)
-# 	report.generate(n, item, book)
-
-# print_date = time.strftime("%d%m%y")
-# print_time = time.strftime("%I%M%S")
-
-# report_name = 'vlb_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
-
-# report.save('results\\'+report_name)
-
-# print(report_name)
-# report.save('results\\vlb_isbn_check'+print_date+'_'+print_time)
-
 print ('The script took {0} seconds !'.format(time.time() - startTime))
