@@ -1,4 +1,4 @@
-import sys
+ import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\amzn\\lib')
 from library_amzn import collate_amzn_data as collate
 from amzn_product import AmznProduct as Product
