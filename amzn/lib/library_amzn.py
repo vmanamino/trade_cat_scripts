@@ -41,143 +41,172 @@ ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # 	# dict, imitate json
 # 	pass
 
-def collate_amzn_data(item_id): # add other attributes of amzn prod.
+def collate_amzn_data(item_id, response_group): # add other attributes of amzn prod.
 	# get amzn response instead of gather amzn responses
-	data = gather_amzn_responses(item_id)	
+	# data = gather_amzn_responses(item_id)
+	response, msg = amzn_request(get_amzn_url(item_id, response_group))	
+
 
 	# create parse amzn response singular
+	# prod_info = parse_amzn_response(response, msg)
+
 	amzn_prod_info = parse_amzn_responses(data, item_id)	
 	return amzn_prod_info
 
-def parse_amzn_response(data, msg):
-	
-	
-
-def parse_amzn_responses(data, item_id): 	
-	amzn_prod_dict = {'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
-	response_count = 0
-	# print(len(data))
-	for datum in data:
-
-		# response count tracks specific response, needed to assign error code to dict key
-		response_count += 1
-		# print(response_count)
-		# print(amzn_prod_dict)
-		# check status success, or failure, on failure fill dict with appropriate message
-		# print(datum.status)		
-		if datum.status is 200:
-			print(datum.status)
-			doc = parse(datum)
+# under construction
+def parse_amzn_response(response, msg, response_group):	
+	if response != 'no response':
+		if response.status == 200:
+			doc = parse(response)
 			doc_root = doc.getroot()
-			for elem in doc_root.findall('aws:OperationRequest', ns):
-				args = elem.find('aws:Arguments', ns)
-				for arg in args.findall('aws:Argument', ns):
-					# print(arg.tag)
-					arg_name = arg.get('Name')
-					# print(arg_name)
-					if arg_name == 'ResponseGroup':					
-						arg_val = arg.get('Value')					
-						if arg_val == 'OfferSummary':
-							if doc_root.find('aws:Items', ns): # too much repitiion
-								for children in doc_root.findall('aws:Items', ns): # too much repitition
-									if children.find('aws:Item', ns): # too much repitition
-										child = children.find('aws:Item', ns) # too much repitition
-										if 	child.find('aws:OfferSummary', ns):		
-											progeny = child.find('aws:OfferSummary', ns)
-											if progeny.find('aws:LowestNewPrice', ns):
-												price_wrapper = progeny.find('aws:LowestNewPrice', ns)
-												if price_wrapper.find('aws:FormattedPrice', ns) is not None:
-													price_info = price_wrapper.find('aws:FormattedPrice', ns)																						
-													amzn_prod_dict['price_info'] = price_info.text[4:]
-												else:
-													amzn_prod_dict['price_info'] = 'None'
-											else:
-												amzn_prod_dict['price_info'] = 'None'
-										else:
-											amzn_prod_dict['price_info'] = 'None'
-									else:
-										amzn_prod_dict['price_info'] = 'None'
-							else:
-								amzn_prod_dict['price_info'] = 'None'							
-						if arg_val == 'OfferListings':							
-							if doc_root.find('aws:Items', ns): # too much repitiion
-								for children in doc_root.findall('aws:Items', ns): # too much repitition
-									if children.find('aws:Item', ns): # too much repitition
-										child = children.find('aws:Item', ns) # too much repitition
-										if child.find('aws:Offers', ns):
-											progeny = child.find('aws:Offers', ns)
-											if progeny.find('aws:Offer', ns):
-												offer = progeny.find('aws:Offer', ns)
-												if offer.find('aws:OfferListing', ns):
-													offer_listing = offer.find('aws:OfferListing', ns)
-													if offer_listing.find('aws:AvailabilityAttributes', ns):
-														availability_attrs = offer_listing.find('aws:AvailabilityAttributes', ns)
-														if availability_attrs.find('aws:AvailabilityType', ns) is not None:
-															availability = availability_attrs.find('aws:AvailabilityType', ns)
-															amzn_prod_dict['availability'] = availability.text
-														else:
-															amzn_prod_dict['availability'] = 'None'	
-													else:
-														amzn_prod_dict['availability'] = 'None'													
-												else:
-													amzn_prod_dict['availability'] = 'None'	
-											else:
-												amzn_prod_dict['availability'] = 'None'
-										else:
-											amzn_prod_dict['availability'] = 'None'
-									else:
-										amzn_prod_dict['availability'] = 'None'
-							else:
-								amzn_prod_dict['availability'] = 'None'								
-
-						if arg_val == 'Images':
-							if doc_root.find('aws:Items', ns): # too much repitition
-								for children in doc_root.findall('aws:Items', ns): # too much repitition
-									if children.find('aws:Item', ns): # too much repitition
-										child = children.find('aws:Item', ns) # too much repitition
-										if child.find('aws:MediumImage', ns):
-											progeny = child.find('aws:MediumImage', ns)
-											if progeny.find('aws:URL', ns) is not None:
-												url = progeny.find('aws:URL', ns)
-												amzn_prod_dict['cover_info'] = url.text
-											else:
-												amzn_prod_dict['cover_info'] = 'None'
-										else:
-											amzn_prod_dict['cover_info'] = 'No cover'
-							else:
-								amzn_prod_dict['cover_info'] = 'No cover'
-							
-						if arg_val == 'ItemAttributes':	
-							if doc_root.find('aws:Items', ns):
-								for children in doc_root.findall('aws:Items', ns):
-									if children.find('aws:Item', ns):										
-										grandchildren = children.findall('aws:Item', ns)
-										print('# of grandchildren', end=': ')
-										print(len(grandchildren))								
-										title, isbn = get_item_attrs(grandchildren, item_id)
-										amzn_prod_dict['isbn'] = isbn
-										amzn_prod_dict['title_info'] = title
-									else:
-										amzn_prod_dict['isbn'] = 'None'
-										amzn_prod_dict['title_info'] = 'None'		
-							else:
-								amzn_prod_dict['isbn'] = 'None'
-								amzn_prod_dict['title_info'] = 'None'										
+			if response_group == 'ItemAttributes':
+				# find all children
+				if doc_root.find('aws:Items', ns):
+					for children in doc_root.findall('aws:Items', ns):
+						if children.find('aws:Item', ns):										
+							grandchildren = children.findall('aws:Item', ns)
+							print('# of grandchildren', end=': ')
+							print(len(grandchildren))								
+							title, isbn = get_item_attrs(grandchildren, item_id)
+							amzn_prod_dict['isbn'] = isbn
+							amzn_prod_dict['title_info'] = title
+						else:
+							amzn_prod_dict['isbn'] = 'None'
+							amzn_prod_dict['title_info'] = 'None'		
+				else:
+					amzn_prod_dict['isbn'] = 'None'
+					amzn_prod_dict['title_info'] = 'None'	
 		else:
-			msg = None
-			if datum.status:
-				msg = datum.status
-			if response_count is 1:
-				amzn_prod_dict['price_info'] = msg
-			if response_count is 2:
-				amzn_prod_dict['availability'] = msg
-			if response_count is 3:
-				amzn_prod_dict['cover_info'] = msg
-			if response_count is 4:
-				amzn_prod_dict['isbn'] = msg
-				amzn_prod_dict['title_info'] = msg
-	print(amzn_prod_dict)
-	return amzn_prod_dict
+			msg = response.status
+	# else:
+		# assing message to product object
+	pass
+
+# def parse_amzn_responses(data, item_id): 	
+# 	amzn_prod_dict = {'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
+# 	response_count = 0
+# 	# print(len(data))
+# 	for datum in data:
+
+# 		# response count tracks specific response, needed to assign error code to dict key
+# 		response_count += 1
+# 		# print(response_count)
+# 		# print(amzn_prod_dict)
+# 		# check status success, or failure, on failure fill dict with appropriate message
+# 		# print(datum.status)		
+# 		if datum.status is 200:
+# 			print(datum.status)
+# 			doc = parse(datum)
+# 			doc_root = doc.getroot()
+# 			for elem in doc_root.findall('aws:OperationRequest', ns):
+# 				args = elem.find('aws:Arguments', ns)
+# 				for arg in args.findall('aws:Argument', ns):
+# 					# print(arg.tag)
+# 					arg_name = arg.get('Name')
+# 					# print(arg_name)
+# 					if arg_name == 'ResponseGroup':					
+# 						arg_val = arg.get('Value')					
+# 						if arg_val == 'OfferSummary':
+# 							if doc_root.find('aws:Items', ns): # too much repitiion
+# 								for children in doc_root.findall('aws:Items', ns): # too much repitition
+# 									if children.find('aws:Item', ns): # too much repitition
+# 										child = children.find('aws:Item', ns) # too much repitition
+# 										if 	child.find('aws:OfferSummary', ns):		
+# 											progeny = child.find('aws:OfferSummary', ns)
+# 											if progeny.find('aws:LowestNewPrice', ns):
+# 												price_wrapper = progeny.find('aws:LowestNewPrice', ns)
+# 												if price_wrapper.find('aws:FormattedPrice', ns) is not None:
+# 													price_info = price_wrapper.find('aws:FormattedPrice', ns)																						
+# 													amzn_prod_dict['price_info'] = price_info.text[4:]
+# 												else:
+# 													amzn_prod_dict['price_info'] = 'None'
+# 											else:
+# 												amzn_prod_dict['price_info'] = 'None'
+# 										else:
+# 											amzn_prod_dict['price_info'] = 'None'
+# 									else:
+# 										amzn_prod_dict['price_info'] = 'None'
+# 							else:
+# 								amzn_prod_dict['price_info'] = 'None'							
+# 						if arg_val == 'OfferListings':							
+# 							if doc_root.find('aws:Items', ns): # too much repitiion
+# 								for children in doc_root.findall('aws:Items', ns): # too much repitition
+# 									if children.find('aws:Item', ns): # too much repitition
+# 										child = children.find('aws:Item', ns) # too much repitition
+# 										if child.find('aws:Offers', ns):
+# 											progeny = child.find('aws:Offers', ns)
+# 											if progeny.find('aws:Offer', ns):
+# 												offer = progeny.find('aws:Offer', ns)
+# 												if offer.find('aws:OfferListing', ns):
+# 													offer_listing = offer.find('aws:OfferListing', ns)
+# 													if offer_listing.find('aws:AvailabilityAttributes', ns):
+# 														availability_attrs = offer_listing.find('aws:AvailabilityAttributes', ns)
+# 														if availability_attrs.find('aws:AvailabilityType', ns) is not None:
+# 															availability = availability_attrs.find('aws:AvailabilityType', ns)
+# 															amzn_prod_dict['availability'] = availability.text
+# 														else:
+# 															amzn_prod_dict['availability'] = 'None'	
+# 													else:
+# 														amzn_prod_dict['availability'] = 'None'													
+# 												else:
+# 													amzn_prod_dict['availability'] = 'None'	
+# 											else:
+# 												amzn_prod_dict['availability'] = 'None'
+# 										else:
+# 											amzn_prod_dict['availability'] = 'None'
+# 									else:
+# 										amzn_prod_dict['availability'] = 'None'
+# 							else:
+# 								amzn_prod_dict['availability'] = 'None'								
+
+# 						if arg_val == 'Images':
+# 							if doc_root.find('aws:Items', ns): # too much repitition
+# 								for children in doc_root.findall('aws:Items', ns): # too much repitition
+# 									if children.find('aws:Item', ns): # too much repitition
+# 										child = children.find('aws:Item', ns) # too much repitition
+# 										if child.find('aws:MediumImage', ns):
+# 											progeny = child.find('aws:MediumImage', ns)
+# 											if progeny.find('aws:URL', ns) is not None:
+# 												url = progeny.find('aws:URL', ns)
+# 												amzn_prod_dict['cover_info'] = url.text
+# 											else:
+# 												amzn_prod_dict['cover_info'] = 'None'
+# 										else:
+# 											amzn_prod_dict['cover_info'] = 'No cover'
+# 							else:
+# 								amzn_prod_dict['cover_info'] = 'No cover'
+							
+# 						if arg_val == 'ItemAttributes':	
+# 							if doc_root.find('aws:Items', ns):
+# 								for children in doc_root.findall('aws:Items', ns):
+# 									if children.find('aws:Item', ns):										
+# 										grandchildren = children.findall('aws:Item', ns)
+# 										print('# of grandchildren', end=': ')
+# 										print(len(grandchildren))								
+# 										title, isbn = get_item_attrs(grandchildren, item_id)
+# 										amzn_prod_dict['isbn'] = isbn
+# 										amzn_prod_dict['title_info'] = title
+# 									else:
+# 										amzn_prod_dict['isbn'] = 'None'
+# 										amzn_prod_dict['title_info'] = 'None'		
+# 							else:
+# 								amzn_prod_dict['isbn'] = 'None'
+# 								amzn_prod_dict['title_info'] = 'None'										
+# 		else:
+# 			msg = None
+# 			if datum.status:
+# 				msg = datum.status
+# 			if response_count is 1:
+# 				amzn_prod_dict['price_info'] = msg
+# 			if response_count is 2:
+# 				amzn_prod_dict['availability'] = msg
+# 			if response_count is 3:
+# 				amzn_prod_dict['cover_info'] = msg
+# 			if response_count is 4:
+# 				amzn_prod_dict['isbn'] = msg
+# 				amzn_prod_dict['title_info'] = msg
+# 	print(amzn_prod_dict)
+# 	return amzn_prod_dict
 
 def get_item_attrs(elements, item_id):	
 	isbn = ''
@@ -217,10 +246,9 @@ def get_item_attrs(elements, item_id):
 
 # async def amzn_request(url):
 def amzn_request(url):
-
-	response = 'no response'
-	msg = ''
     request = urllib.request.Request(url)
+    response = 'no response'
+    msg = ''
     try:
     	# add timeout
     	response = urllib.request.urlopen(request, timeout=10)
@@ -230,7 +258,7 @@ def amzn_request(url):
     	msg = 'socket timeout'
     except socket.error:
     	msg = 'socket error'
-    finally;
+    finally:
     	return response, msg
 
 # response group param

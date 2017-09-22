@@ -1,4 +1,4 @@
- import sys
+import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\amzn\\lib')
 from library_amzn import collate_amzn_data as collate
 from amzn_product import AmznProduct as Product
@@ -36,6 +36,7 @@ log.write('%s\t%s\t%s\t%s\n' % ('ISBN', 'Response Group', 'Log time', 'Log date'
 if option == 'workbook':
 	print(option)
 
+	item_count = 1 # for the header
 	worksheets = get_worksheets('dataset\\'+filename)
 
 	for data in worksheets:
@@ -43,6 +44,7 @@ if option == 'workbook':
 		# range is to, not including the upper limit
 		count = count + 1
 		for n in range(2, count):
+			item_count += 1
 			log_count += 1
 			log_date = time.strftime("%d:%m:%y")
 			log_time = time.strftime("%I:%M:%S")
@@ -50,13 +52,15 @@ if option == 'workbook':
 			print(log_time)		
 			item = BFLUXItem(data, n)
 			product_data = collate(item.isbn)			
-			log.write('%s\t%s\t%s\t%s\n' % (item.isbn, #response group# log_time, log_date))
+			log.write('%s\t%s\t%s\t%s\n' % (item.isbn, response_group, log_time, log_date))
 			book = Product(product_data)
-			report.generate(n, item, book)
+			report.generate(item_count, item, book)
 # create loop on responseGroups
 # create inner loop on row count
 # set row count to zero, as many times as number of responseGroups, here 3
 # then loop on row count as many times
+
+
 elif option == 'spreadsheet':
 	print(option)
 	data = get_sheetdata('dataset\\'+filename)
@@ -64,22 +68,28 @@ elif option == 'spreadsheet':
 	print(count)
 	# range is to, not including the upper limit
 	count = count + 1
-	for n in range(2, 100):
-		time.sleep(10)
-		log_count += 1
-		log_date = time.strftime("%d:%m:%y")
-		log_time = time.strftime("%I:%M:%S")
-		print(log_count, end=': ')
-		print(log_time)		
-		item = BFLUXItem(data, n)
-		product_data = collate(item.isbn)		
-		log.write('%s\t%s\t%s\t%s\n' % (item.isbn, #response group# log_time, log_date))
-		book = Product(product_data)
-		report.generate(n, item, book) 
+	for group in responseGroups:
+		response_group = responseGroups[group]
+		
+'''
+need to work on calling the api from here
+'''
+# 	for n in range(2, 100):
+# 		time.sleep(10)
+# 		log_count += 1
+# 		log_date = time.strftime("%d:%m:%y")
+# 		log_time = time.strftime("%I:%M:%S")
+# 		print(log_count, end=': ')
+# 		print(log_time)		
+# 		item = BFLUXItem(data, n)
+# 		product_data = collate(item.isbn)		
+# 		log.write('%s\t%s\t%s\t%s\n' % (item.isbn, response_group, log_time, log_date))
+# 		book = Product(product_data)
+# 		report.generate(n, item, book) 
 
-print_date = time.strftime("%d%m%y")
-print_time = time.strftime("%I%M%S")
+# print_date = time.strftime("%d%m%y")
+# print_time = time.strftime("%I%M%S")
 
-report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
-report.save('results\\'+report_name)
-log.close()
+# report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
+# report.save('results\\'+report_name)
+# log.close()
