@@ -48,14 +48,20 @@ log.write('%s\t%s\t%s\t%s\t%s\n' % ('Item logged', 'Code', 'ISBN', 'Log time', '
 if option == 'workbook':
 	print(option)
 
+	# total item count continually added to, start at one for the report header
+	item_count = 1
+
 	worksheets = get_worksheets('dataset\\'+filename)
 
 	for data in worksheets:
 		count = data.max_row
+		
 		# range is to, not including the upper limit
 		count = count + 1
+
 		for n in range(2, count):
 			log_count += 1
+			item_count += 1
 			log_date = time.strftime("%d:%m:%y")
 			log_time = time.strftime("%I:%M:%S")
 			print(log_count, end=': ')
@@ -65,7 +71,9 @@ if option == 'workbook':
 			print(product_data['code'])
 			log.write('%s\t%s\t%s\t%s\t%s\n' % (log_count, product_data['code'], item.isbn, log_time, log_date))
 			book = Product(product_data)
-			report.generate(n, item, book)
+			report.generate(item_count, item, book)
+
+		print(item_count)
 
 elif option == 'spreadsheet':
 	print(option)

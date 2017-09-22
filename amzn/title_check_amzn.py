@@ -23,13 +23,15 @@ promotion = sys.argv[2]
 year = sys.argv[3]
 option = sys.argv[4]
 
+responseGroups = {'title_info': 'ItemAttributes', 'cover_info': 'Images', 'sales_info': 'OfferFull'}
+
 filename = medium + '_' + promotion + '_' + year + '.xlsx'
 print(filename)
 
 log_count = 0
 
 log = open('results\\simple_log.txt', 'w')
-log.write('%s\t%s\t%s\t%s\n' % ('Item logged', 'ISBN', 'Log time', 'Log date'))
+log.write('%s\t%s\t%s\t%s\n' % ('ISBN', 'Response Group', 'Log time', 'Log date'))
 
 if option == 'workbook':
 	print(option)
@@ -48,10 +50,13 @@ if option == 'workbook':
 			print(log_time)		
 			item = BFLUXItem(data, n)
 			product_data = collate(item.isbn)			
-			log.write('%s\t%s\t%s\t%s\n' % (log_count, item.isbn, log_time, log_date))
+			log.write('%s\t%s\t%s\t%s\n' % (item.isbn, #response group# log_time, log_date))
 			book = Product(product_data)
 			report.generate(n, item, book)
-
+# create loop on responseGroups
+# create inner loop on row count
+# set row count to zero, as many times as number of responseGroups, here 3
+# then loop on row count as many times
 elif option == 'spreadsheet':
 	print(option)
 	data = get_sheetdata('dataset\\'+filename)
@@ -68,7 +73,7 @@ elif option == 'spreadsheet':
 		print(log_time)		
 		item = BFLUXItem(data, n)
 		product_data = collate(item.isbn)		
-		log.write('%s\t%s\t%s\t%s\n' % (log_count, item.isbn, log_time, log_date))
+		log.write('%s\t%s\t%s\t%s\n' % (item.isbn, #response group# log_time, log_date))
 		book = Product(product_data)
 		report.generate(n, item, book) 
 

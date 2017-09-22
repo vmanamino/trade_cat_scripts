@@ -41,10 +41,17 @@ ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # 	# dict, imitate json
 # 	pass
 
-def collate_amzn_data(item_id): # add other attributes of amzn prod.	
+def collate_amzn_data(item_id): # add other attributes of amzn prod.
+	# get amzn response instead of gather amzn responses
 	data = gather_amzn_responses(item_id)	
+
+	# create parse amzn response singular
 	amzn_prod_info = parse_amzn_responses(data, item_id)	
 	return amzn_prod_info
+
+def parse_amzn_response(data, msg):
+	
+	
 
 def parse_amzn_responses(data, item_id): 	
 	amzn_prod_dict = {'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
@@ -211,18 +218,28 @@ def get_item_attrs(elements, item_id):
 # async def amzn_request(url):
 def amzn_request(url):
 
+	response = 'no response'
+	msg = ''
     request = urllib.request.Request(url)
     try:
     	# add timeout
-    	return urllib.request.urlopen(request, timeout=10)
+    	response = urllib.request.urlopen(request, timeout=10)
     except urllib.request.HTTPError as err:
-    	return err
+    	response = err
     except socket.timeout:
-    	print('socket timeout')
-    	print(socket.timeout)
+    	msg = 'socket timeout'
     except socket.error:
-    	print('socket error')
-    	print(socket.error)
+    	msg = 'socket error'
+    finally;
+    	return response, msg
+
+# response group param
+
+def get_amzn_response(item_id, responseGroup):
+	
+	response = amzn_request(get_amzn_url(item_id, responseGroup))
+	
+	return response
 
 def gather_amzn_responses(item_id):		
 
