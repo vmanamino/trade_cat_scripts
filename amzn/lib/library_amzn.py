@@ -41,32 +41,23 @@ ns = {'aws':'http://webservices.amazon.com/AWSECommerceService/2011-08-01'}
 # 	# dict, imitate json
 # 	pass
 
-def collate_amzn_data(item_id, response_group): # add other attributes of amzn prod.
-	# get amzn response instead of gather amzn responses
-	# data = gather_amzn_responses(item_id)
+def collate_amzn_data(item_id, response_group): # add other attributes of amzn prod.	
 	response, msg = amzn_request(get_amzn_url(item_id, response_group))	
-
-
-	# create parse amzn response singular
-	# prod_info = parse_amzn_response(response, msg)
-
-	amzn_prod_info = parse_amzn_responses(data, item_id)	
-	return amzn_prod_info
-
+	return parse_amzn_response(response, item_id, msg, response_group)	
+	
 # under construction
-def parse_amzn_response(response, msg, response_group):	
-	if response != 'no response':
-		if response.status == 200:
-			doc = parse(response)
-			doc_root = doc.getroot()
-			if response_group == 'ItemAttributes':
-				# find all children
-				if doc_root.find('aws:Items', ns):
+def parse_amzn_response(response, item_id, msg, response_group):
+	amzn_prod_dict = {}	
+	if response_group == 'ItemAttributes':
+		if response != 'no response':		
+			if response.status == 200:			
+				doc = parse(response)			
+				doc_root = doc.getroot()							
+					# find all children
+				if doc_root.find('aws:Items', ns):									
 					for children in doc_root.findall('aws:Items', ns):
-						if children.find('aws:Item', ns):										
-							grandchildren = children.findall('aws:Item', ns)
-							print('# of grandchildren', end=': ')
-							print(len(grandchildren))								
+						if children.find('aws:Item', ns):														
+							grandchildren = children.findall('aws:Item', ns)															
 							title, isbn = get_item_attrs(grandchildren, item_id)
 							amzn_prod_dict['isbn'] = isbn
 							amzn_prod_dict['title_info'] = title
@@ -76,11 +67,14 @@ def parse_amzn_response(response, msg, response_group):
 				else:
 					amzn_prod_dict['isbn'] = 'None'
 					amzn_prod_dict['title_info'] = 'None'	
+			else:
+				amzn_prod_dict['isbn'] = response.status
+				amzn_prod_dict['title_info'] = response.status
 		else:
-			msg = response.status
-	# else:
-		# assing message to product object
-	pass
+			amzn_prod_dict['isbn'] = msg
+			amzn_prod_dict['title_info'] = msg
+
+	return amzn_prod_dict
 
 # def parse_amzn_responses(data, item_id): 	
 # 	amzn_prod_dict = {'isbn': '', 'title_info':'', 'availability': '', 'price_info': '', 'cover_info': ''}
@@ -212,12 +206,12 @@ def get_item_attrs(elements, item_id):
 	isbn = ''
 	title = ''
 	for each in elements:									
-		if each.find('aws:ItemAttributes', ns):									
+		if each.find('aws:ItemAttributes', ns):											
 			progeny = each.find('aws:ItemAttributes', ns)									
 			if progeny.find('aws:EAN', ns) is not None or progeny.find('aws:EISBN', ns) is not None:
-				if progeny.find('aws:EAN', ns) is not None:																
-					isbn_to_check = progeny.find('aws:EAN', ns)
-					if isbn_to_check.text == item_id:
+				if progeny.find('aws:EAN', ns) is not None:																				
+					isbn_to_check = progeny.find('aws:EAN', ns)					
+					if isbn_to_check.text == item_id:						
 						isbn = isbn_to_check.text						
 						if progeny.find('aws:Title', ns) is not None:							
 							title = progeny.find('aws:Title', ns)
@@ -234,7 +228,7 @@ def get_item_attrs(elements, item_id):
 							title = title.text							
 						else:
 							title = 'None'						
-						return isbn, title
+						return title, isbn
 			else:
 				isbn = 'None'
 				title = 'None'
@@ -263,11 +257,11 @@ def amzn_request(url):
 
 # response group param
 
-def get_amzn_response(item_id, responseGroup):
+# def get_amzn_response(item_id, responseGroup):
 	
-	response = amzn_request(get_amzn_url(item_id, responseGroup))
+# 	response = amzn_request(get_amzn_url(item_id, responseGroup))
 	
-	return response
+# 	return response
 
 def gather_amzn_responses(item_id):		
 
@@ -291,14 +285,14 @@ def gather_amzn_responses(item_id):
 	# 	amzn_request(get_amzn_url(item_id, 'ItemAttributes'))))
 	# return amzn_data	
     
-def get_amzn_url(isbn, data_point):
+def get_amzn_url(isbn, responseGroup):
 
-	s = create_string(isbn, data_point)
+	s = create_string(isbn, responseGroup)
 	pairs = create_pairs(s)
 	s_to_send = create_prefixes(pairs)
 	digest = create_digest(s_to_send)
 	signature_param_value = create_signature(digest)
-	url = create_autographed_url(s_to_send, signature_param_value)
+	url = create_autographed_url(s_to_send, signature_param_value)	
 	return url
 	# return get_amzn_request(url)
 
@@ -418,3 +412,6 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9783662500330', 'OfferFull'))
 
 # print(collate_amzn_data('9783642450525'))
+
+# print(collate_amzn_data('9783642450525', 'ItemAttributes'))
+# print(get_amzn_url('9783642450525', 'ItemAttributes'))

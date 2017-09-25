@@ -1,3 +1,4 @@
+from openpyxl import Workbook
 import sys
 sys.path.append('C:\\Code\\trade_cat_scripts\\amzn\\lib')
 from library_amzn import collate_amzn_data as collate
@@ -15,7 +16,7 @@ startTime = time.time()
 # product = Product(data)
 # print(product.isbn)
 
-report = Report('isbn check', 'AmznDE')
+# report = Report('isbn check', 'AmznDE')
 
 
 medium = sys.argv[1]
@@ -23,7 +24,9 @@ promotion = sys.argv[2]
 year = sys.argv[3]
 option = sys.argv[4]
 
-responseGroups = {'title_info': 'ItemAttributes', 'cover_info': 'Images', 'sales_info': 'OfferFull'}
+# responseGroups = {'title_info': 'ItemAttributes', 'cover_info': 'Images', 'sales_info': 'OfferFull'}
+
+responseGroups = {'title_info': 'ItemAttributes'}
 
 filename = medium + '_' + promotion + '_' + year + '.xlsx'
 print(filename)
@@ -32,6 +35,8 @@ log_count = 0
 
 log = open('results\\simple_log.txt', 'w')
 log.write('%s\t%s\t%s\t%s\n' % ('ISBN', 'Response Group', 'Log time', 'Log date'))
+
+buk = Workbook()
 
 if option == 'workbook':
 	print(option)
@@ -60,16 +65,49 @@ if option == 'workbook':
 # set row count to zero, as many times as number of responseGroups, here 3
 # then loop on row count as many times
 
-
 elif option == 'spreadsheet':
-	print(option)
-	data = get_sheetdata('dataset\\'+filename)
-	count = data.max_row
-	print(count)
-	# range is to, not including the upper limit
-	count = count + 1
-	for group in responseGroups:
-		response_group = responseGroups[group]
+	isbn_check.cell(row=1, column=1, value="BFLUX ISBN")
+	isbn_check.cell(row=1, column=2, value="BFLUX Title")
+	isbn_check.cell(row=1, column=3, value="AMZN ISBN")
+	isbn_check.cell(row=1, column=4, value="AMZN Title")
+	isbn_check.cell(row=1, column=5, value="Match")
+
+	group_count = 0
+	for report in responseGroups:
+		response_group = responseGroups[report]
+		print(option)
+		data = get_sheetdata('dataset\\'+filename)
+		count = data.max_row
+		print(count)
+		# range is to, not including the upper limit
+		count = count + 1
+		if response_group == 'ItemAttributes':
+			isbn_check = buk.active
+			isbn_check.title = 'ISBN Check'
+			for n in range(2, count):
+				time.sleep(10)
+				log_count += 1
+				log_date = time.strftime("%d:%m:%y")
+				log_time = time.strftime("%I:%M:%S")
+				print(log_count, end=': ')
+				print(log_time)		
+				item = BFLUXItem(data, n)
+				product_data = collate(item.isbn, response_group)		
+				log.write('%s\t%s\t%s\t%s\n' % (item.isbn, response_group, log_time, log_date))
+				print(product_data)
+				isbn_check.cell(row=n, column=1, value=item.isbn)
+				isbn_check.cell(row=n, column=2, value=item.title)
+				isbn_check.cell(row=n, column=3, value=product_data['isbn'])
+				isbn_check.cell(row=n, column=4, value=product_data['title_info'])
+				flag = False
+				if item.isbn == product_data['isbn']:
+					flag = True
+				isbn_check.cell(row=n, column=5, value=flag)
+	print_date = time.strftime("%d%m%y")
+	print_time = time.strftime("%I%M%S")
+	report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
+	buk.save('results\\'+report_name+'.xlsx')
+
 		
 '''
 need to work on calling the api from here
@@ -92,4 +130,4 @@ need to work on calling the api from here
 
 # report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
 # report.save('results\\'+report_name)
-# log.close()
+log.close()
