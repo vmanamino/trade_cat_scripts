@@ -66,11 +66,7 @@ if option == 'workbook':
 # then loop on row count as many times
 
 elif option == 'spreadsheet':
-	isbn_check.cell(row=1, column=1, value="BFLUX ISBN")
-	isbn_check.cell(row=1, column=2, value="BFLUX Title")
-	isbn_check.cell(row=1, column=3, value="AMZN ISBN")
-	isbn_check.cell(row=1, column=4, value="AMZN Title")
-	isbn_check.cell(row=1, column=5, value="Match")
+	
 
 	group_count = 0
 	for report in responseGroups:
@@ -84,6 +80,11 @@ elif option == 'spreadsheet':
 		if response_group == 'ItemAttributes':
 			isbn_check = buk.active
 			isbn_check.title = 'ISBN Check'
+			isbn_check.cell(row=1, column=1, value="BFLUX ISBN")
+			isbn_check.cell(row=1, column=2, value="BFLUX Title")
+			isbn_check.cell(row=1, column=3, value="AMZN ISBN")
+			isbn_check.cell(row=1, column=4, value="AMZN Title")
+			isbn_check.cell(row=1, column=5, value="Match")
 			for n in range(2, count):
 				time.sleep(10)
 				log_count += 1
