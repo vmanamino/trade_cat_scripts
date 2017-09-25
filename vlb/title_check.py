@@ -42,7 +42,10 @@ print(filename)
 
 log_count = 0
 
-log = open('results\\simple_log.txt', 'w')
+print_date = time.strftime("%d%m%y")
+print_time = time.strftime("%I%M%S")
+
+log = open('results\\'+medium+'_simple_log_'+print_date+'_'+print_time+'.txt', 'w')
 log.write('%s\t%s\t%s\t%s\t%s\n' % ('Item logged', 'Code', 'ISBN', 'Log time', 'Log date'))
 
 if option == 'workbook':
