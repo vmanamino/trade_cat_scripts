@@ -82,11 +82,11 @@ elif option == 'spreadsheet':
 			isbn_check.title = 'ISBN Check'
 			isbn_check.cell(row=1, column=1, value="BFLUX ISBN")
 			isbn_check.cell(row=1, column=2, value="BFLUX Title")
-			isbn_check.cell(row=1, column=3, value="AMZN ISBN")
-			isbn_check.cell(row=1, column=4, value="AMZN Title")
+			isbn_check.cell(row=1, column=3, value="AMZN DE ISBN")
+			isbn_check.cell(row=1, column=4, value="AMZN DE Title")
 			isbn_check.cell(row=1, column=5, value="Match")
 			for n in range(2, count):
-				time.sleep(10)
+				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
 				log_time = time.strftime("%I:%M:%S")
@@ -103,7 +103,33 @@ elif option == 'spreadsheet':
 				flag = False
 				if item.isbn == product_data['isbn']:
 					flag = True
-				isbn_check.cell(row=n, column=5, value=flag)
+				isbn_check.cell(row=n, column=5, value=flag)			
+		if response_group == 'OfferFull':
+			sales_info = buk.create_sheet(report)
+			sales_info.cell(row=1, column=1, value="BFLUX ISBN")
+			sales_info.cell(row=1, column=2, value="BFLUX Title")
+			sales_info.cell(row=1, column=3, value="BFLUX Price")
+			sales_info.cell(row=1, column=4, value="AMZN DE Price")
+			sales_info.cell(row=1, column=5, value="BFLUX Availabity")
+			sales_info.cell(row=1, column=6, value="AMZN DE Availability")
+			for n in range(2, 15):
+				time.sleep(1)
+				log_count += 1
+				log_date = time.strftime("%d:%m:%y")
+				log_time = time.strftime("%I:%M:%S")
+				print(log_count, end=': ')
+				print(log_time)		
+				item = BFLUXItem(data, n)
+				product_data = collate(item.isbn, response_group)		
+				log.write('%s\t%s\t%s\t%s\n' % (item.isbn, response_group, log_time, log_date))				
+				print(product_data)
+				sales_info.cell(row=n, column=1, value=item.isbn)
+				sales_info.cell(row=n, column=2, value=item.title)
+				sales_info.cell(row=n, column=3, value=item.price_DE)
+				sales_info.cell(row=n, column=4, value=product_data['price'])
+				sales_info.cell(row=n, column=5, value=item.del_status)
+				sales_info.cell(row=n, column=6, value=product_data['availability'])			
+
 	print_date = time.strftime("%d%m%y")
 	print_time = time.strftime("%I%M%S")
 	report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time

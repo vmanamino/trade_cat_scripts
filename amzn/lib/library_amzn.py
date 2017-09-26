@@ -62,11 +62,11 @@ def parse_amzn_response(response, item_id, msg, response_group):
 							amzn_prod_dict['isbn'] = isbn
 							amzn_prod_dict['title_info'] = title
 						else:
-							amzn_prod_dict['isbn'] = 'None'
-							amzn_prod_dict['title_info'] = 'None'		
+							amzn_prod_dict['isbn'] = 'No item element'
+							amzn_prod_dict['title_info'] = 'No item element'		
 				else:
-					amzn_prod_dict['isbn'] = 'None'
-					amzn_prod_dict['title_info'] = 'None'	
+					amzn_prod_dict['isbn'] = 'No children of Items'
+					amzn_prod_dict['title_info'] = 'No children of Items'	
 			else:
 				amzn_prod_dict['isbn'] = response.status
 				amzn_prod_dict['title_info'] = response.status
@@ -74,6 +74,60 @@ def parse_amzn_response(response, item_id, msg, response_group):
 			amzn_prod_dict['isbn'] = msg
 			amzn_prod_dict['title_info'] = msg
 
+	if response_group == 'OfferFull':
+		if response != 'no response':
+			if response.status == 200:
+				doc = parse(response)			
+				doc_root = doc.getroot()
+				if doc_root.find('aws:Items', ns):
+					for child in doc_root.findall('aws:Items', ns):
+						if child.find('aws:Item', ns):														
+							for progeny in child.findall('aws:Item', ns):
+								if progeny.find('aws:Offers', ns):
+									for kid in progeny.findall('aws:Offers', ns):
+										if kid.find('aws:Offer', ns):
+											for grandkid in kid.findall('aws:Offer', ns):
+												if grandkid.find('aws:OfferListing', ns):
+													for proprogeny in grandkid.findall('aws:OfferListing', ns):
+														if proprogeny.find('aws:Price', ns):
+															for kind in proprogeny.findall('aws:Price', ns):
+																if kind.find('aws:FormattedPrice', ns) is not None:
+																	price = kind.find('aws:FormattedPrice', ns)
+																	amzn_prod_dict['price'] = price
+																else:
+																	amzn_prod_dict['price'] = 'no FormattedPrice element'	
+														else:
+															amzn_prod_dict['price'] = 'no Price element'
+														if proprogeny.find('aws:AvailabilityAttributes', ns):
+															for nino in proprogeny.findall('aws:AvailabilityAttributes', ns):
+																if nino.find('aws:AvailabilityType', ns) is not None:
+																	availability = nino.find('aws:AvailabilityType', ns)
+																	amzn_prod_dict['availability'] = availability
+																else:
+																	amzn_prod_dict['availability'] = 'no AvailabilityType element'
+														else:
+															amzn_prod_dict['availability'] = 'no AvailabilityAttributes element'																		
+												else:
+													amzn_prod_dict['price'] = 'no OfferListing element'
+													amzn_prod_dict['availability'] = 'no OfferListing element'
+										else:
+											amzn_prod_dict['price'] = 'no Offer element'
+											amzn_prod_dict['availability'] = 'no Offer element'
+								else:
+									amzn_prod_dict['price'] = 'no Offers element'
+									amzn_prod_dict['availability'] = 'no Offers element'
+						else:
+							amzn_prod_dict['price'] = 'no Items element'
+							amzn_prod_dict['availability'] = 'no Items element'
+				else:
+					amzn_prod_dict['price'] = 'no Items element'
+					amzn_prod_dict['availability'] = 'no Items element'
+			else:
+				amzn_prod_dict['price'] = response.status
+				amzn_prod_dict['availability'] = response.status
+		else:
+			amzn_prod_dict['price'] = msg
+			amzn_prod_dict['availability'] = msg
 	return amzn_prod_dict
 
 # def parse_amzn_responses(data, item_id): 	
@@ -230,12 +284,12 @@ def get_item_attrs(elements, item_id):
 							title = 'None'						
 						return title, isbn
 			else:
-				isbn = 'None'
-				title = 'None'
+				isbn = 'No ISBNs'
+				title = 'No ISBNs'
 				return title, isbn
 		else:
-			isbn = 'None'
-			title = 'None'
+			isbn = 'No Item Attributes element'
+			title = 'No Item Attributes element'
 			return title, isbn
 
 # async def amzn_request(url):
@@ -243,17 +297,28 @@ def amzn_request(url):
     request = urllib.request.Request(url)
     response = 'no response'
     msg = ''
-    try:
-    	# add timeout
-    	response = urllib.request.urlopen(request, timeout=10)
-    except urllib.request.HTTPError as err:
-    	response = err
-    except socket.timeout:
-    	msg = 'socket timeout'
-    except socket.error:
-    	msg = 'socket error'
-    finally:
-    	return response, msg
+    tries = 10
+    while tries > 0:
+	    try:
+	    	# add timeout
+	    	response = urllib.request.urlopen(request, timeout=10)
+	    except urllib.request.HTTPError as http_err:
+	    	tries -= 1	    	
+	    	response = http_err
+	    	msg = 'http error'
+	    	time.sleep(2)
+	    except socket.timeout:
+	    	tries -= 1	    	
+	    	msg = 'socket timeout'
+	    	time.sleep(2)
+	    except socket.error:
+	    	tries -= 1	    	
+	    	msg = 'socket error'
+	    	time.sleep(2)
+	    else:
+	    	return response, msg
+    return response, msg
+    
 
 # response group param
 
@@ -415,3 +480,10 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # print(collate_amzn_data('9783642450525', 'ItemAttributes'))
 # print(get_amzn_url('9783642450525', 'ItemAttributes'))
+
+# print(get_amzn_url('9783642545962', 'OfferFull'))
+
+# this isbn has different on sale type offer
+# print(get_amzn_url('9783642361715', 'OfferFull'))
+
+print(get_amzn_url('9788847057661', 'OfferFull'))
