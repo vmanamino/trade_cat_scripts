@@ -85,7 +85,7 @@ elif option == 'spreadsheet':
 			isbn_check.cell(row=1, column=3, value="AMZN DE ISBN")
 			isbn_check.cell(row=1, column=4, value="AMZN DE Title")
 			isbn_check.cell(row=1, column=5, value="Match")
-			for n in range(2, 4003):
+			for n in range(2, count):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
@@ -135,7 +135,7 @@ elif option == 'spreadsheet':
 	report_name = 'amznDE_'+medium + '_' + promotion + '_' + year + '_report_'+print_date+'_'+print_time
 	buk.save('results\\'+report_name+'.xlsx')
 
-		
+print ('The script took {0} seconds !'.format(time.time() - startTime))
 '''
 need to work on calling the api from here
 '''

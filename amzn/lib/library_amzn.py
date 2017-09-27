@@ -1,13 +1,13 @@
 import datetime
-import requests
+# import requests
 # import time
 import hmac
 import hashlib
 import base64
 from hashlib import sha256
-import asyncio
-import aiohttp
-import async_timeout
+# import asyncio
+# import aiohttp
+# import async_timeout
 import os
 import sys
 # append path to keys for import
@@ -486,4 +486,4 @@ def create_autographed_url(s_to_send, signature_param_value):
 # this isbn has different on sale type offer
 # print(get_amzn_url('9783642361715', 'OfferFull'))
 
-print(get_amzn_url('9788847057661', 'OfferFull'))
+# print(get_amzn_url('9788847057661', 'OfferFull'))
