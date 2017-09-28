@@ -260,70 +260,81 @@ def get_item_attrs(elements, item_id):
 	title = ''
 	for each in elements:					
 		if each.find('aws:ItemAttributes', ns):									
-			progeny = each.find('aws:ItemAttributes', ns)									
-			if progeny.find('aws:EAN', ns) is not None or progeny.find('aws:EISBN', ns) is not None:
-				if progeny.find('aws:EAN', ns) is not None:																		
-					isbn_to_check = progeny.find('aws:EAN', ns)					
-					if isbn_to_check.text == item_id:				
-						isbn = isbn_to_check.text						
-						if progeny.find('aws:Title', ns) is not None:						
-							title = progeny.find('aws:Title', ns)
-							title = title.text								
-						else:
-							title = 'No Title element, but ISBN matches EAN'
-						return title, isbn
-					elif progeny.find('aws:EISBN', ns) is not None:		
-						isbn_to_check = progeny.find('aws:EISBN', ns)
-						if isbn_to_check.text == item_id:
-							isbn = isbn_to_check.text
-							if progeny.find('aws:Title', ns) is not None:
-								title = progeny.find('aws:Title', ns)
-								title = title.text							
+			progeny = each.find('aws:ItemAttributes', ns)
+			if progeny.find('aws:Binding', ns) is not None:
+				binding = progeny.find('aws:Binding', ns)
+				if binding.text == 'Gebundene Ausgabe': # language specific																	
+					if progeny.find('aws:EAN', ns) is not None or progeny.find('aws:EISBN', ns) is not None:
+						if progeny.find('aws:EAN', ns) is not None:																		
+							isbn_to_check = progeny.find('aws:EAN', ns)					
+							if isbn_to_check.text == item_id:				
+								isbn = isbn_to_check.text						
+								if progeny.find('aws:Title', ns) is not None:						
+									title = progeny.find('aws:Title', ns)
+									title = title.text								
+								else:
+									title = 'No Title element, but ISBN matches EAN'
+								return title, isbn
+							elif progeny.find('aws:EISBN', ns) is not None:		
+								isbn_to_check = progeny.find('aws:EISBN', ns)
+								if isbn_to_check.text == item_id:
+									isbn = isbn_to_check.text
+									if progeny.find('aws:Title', ns) is not None:
+										title = progeny.find('aws:Title', ns)
+										title = title.text							
+									else:
+										title = 'No Title element, but bflux ISBN matches EISBN'						
+									return title, isbn
+								else:
+									isbn = 'bflux ISBN does not match EAN or EISBN'
+									if progeny.find('aws:Title', ns) is not None:
+										title = progeny.find('aws:Title', ns)
+										title = title.text							
+									else:
+										title = 'No Title element'
+									return title, isbn
 							else:
-								title = 'No Title element, but bflux ISBN matches EISBN'						
-							return title, isbn
-						else:
-							isbn = 'bflux ISBN does not match EAN or EISBN'
-							if progeny.find('aws:Title', ns) is not None:
-								title = progeny.find('aws:Title', ns)
-								title = title.text							
+								isbn = 'bflux ISBN does not match EAN, EISBN doees not exist'
+								if progeny.find('aws:Title', ns) is not None:
+									title = progeny.find('aws:Title', ns)
+									title = title.text						
+								else:
+									title = 'No Title element, bflux ISBN does not match EAN, EISBN doees not exist'						
+								return title, isbn				
+						else: # progeny.find('aws:EISBN', ns) is not None:					
+							isbn_to_check = progeny.find('aws:EISBN', ns)
+							print('isbn to check', end=': ')
+							print(isbn_to_check.text)
+							print('bflux isbn', end=': ')
+							print(item_id)
+							if isbn_to_check.text == item_id:
+								isbn = isbn_to_check.text
+								if progeny.find('aws:Title', ns) is not None:
+									title = progeny.find('aws:Title', ns)
+									title = title.text							
+								else:
+									title = 'None'						
+								return title, isbn
 							else:
-								title = 'No Title element'
-							return title, isbn
+								isbn = 'No EAN, but EISBN present, but bflux ISBN does not match'
+								if progeny.find('aws:Title', ns) is not None:
+									title = progeny.find('aws:Title', ns)
+									title = title.text							
+								else:
+									title = 'No EAN and No Title element, but EISBN present, but bflux ISBN does not match'
+								return title, isbn
 					else:
-						isbn = 'bflux ISBN does not match EAN, EISBN doees not exist'
-						if progeny.find('aws:Title', ns) is not None:
-							title = progeny.find('aws:Title', ns)
-							title = title.text						
-						else:
-							title = 'No Title element, bflux ISBN does not match EAN, EISBN doees not exist'						
-						return title, isbn				
-				else: # progeny.find('aws:EISBN', ns) is not None:					
-					isbn_to_check = progeny.find('aws:EISBN', ns)
-					print('isbn to check', end=': ')
-					print(isbn_to_check.text)
-					print('bflux isbn', end=': ')
-					print(item_id)
-					if isbn_to_check.text == item_id:
-						isbn = isbn_to_check.text
-						if progeny.find('aws:Title', ns) is not None:
-							title = progeny.find('aws:Title', ns)
-							title = title.text							
-						else:
-							title = 'None'						
-						return title, isbn
-					else:
-						isbn = 'No EAN, but EISBN present, but bflux ISBN does not match'
-						if progeny.find('aws:Title', ns) is not None:
-							title = progeny.find('aws:Title', ns)
-							title = title.text							
-						else:
-							title = 'No EAN and No Title element, but EISBN present, but bflux ISBN does not match'
+						isbn = 'No EAN, no EISBN'
+						title = 'No EAN, no EISBN, cannot get to title element'
 						return title, isbn
 			else:
-				isbn = 'No EAN, no EISBN'
-				title = 'No EAN, no EISBN, cannot get to title element'
-				return title, isbn
+				isbn = 'No Binding Element, cannot get to EAN, EISBN'
+				if progeny.find('aws:Title', ns) is not None:
+					title = progeny.find('aws:Title', ns)
+					title = title.text							
+				else:
+					title = 'No Binding element, no Title element, cannot get to EAN, EISBN'
+					return title, isbn
 		else:
 			isbn = 'No Item Attributes element'
 			title = 'No Item Attributes element'
@@ -531,3 +542,5 @@ def create_autographed_url(s_to_send, signature_param_value):
 
 # good example of confusing amazon grouping
 # print(get_amzn_url('9789462651050', 'ItemAttributes'))
+
+print(get_amzn_url('9789462651432', 'ItemAttributes'))
