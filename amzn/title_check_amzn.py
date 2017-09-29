@@ -85,7 +85,7 @@ elif option == 'spreadsheet':
 			isbn_check.cell(row=1, column=3, value="AMZN DE ISBN")
 			isbn_check.cell(row=1, column=4, value="AMZN DE Title")
 			isbn_check.cell(row=1, column=5, value="Match")
-			for n in range(2, 13):
+			for n in range(2, 10002):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
@@ -112,7 +112,7 @@ elif option == 'spreadsheet':
 			sales_info.cell(row=1, column=4, value="AMZN DE Price")
 			sales_info.cell(row=1, column=5, value="BFLUX Availabity")
 			sales_info.cell(row=1, column=6, value="AMZN DE Availability")
-			for n in range(2, 15):
+			for n in range(2, 10002):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
