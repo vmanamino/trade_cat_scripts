@@ -600,5 +600,5 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9789462651050', 'ItemAttributes'))
 
 # print(get_amzn_url('9783662494844', 'ItemAttributes'))
-print(collate_amzn_data('9789462651043', 'ItemAttributes'))
-print(get_amzn_url('9789462651043', 'ItemAttributes'))
+# print(collate_amzn_data('9783642404061', 'ItemAttributes'))
+# print(get_amzn_url('9783642404061', 'ItemAttributes'))
