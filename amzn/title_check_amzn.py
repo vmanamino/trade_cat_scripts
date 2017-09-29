@@ -85,7 +85,7 @@ elif option == 'spreadsheet':
 			isbn_check.cell(row=1, column=3, value="AMZN DE ISBN")
 			isbn_check.cell(row=1, column=4, value="AMZN DE Title")
 			isbn_check.cell(row=1, column=5, value="Match")
-			for n in range(2, 10002):
+			for n in range(2, 100):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")

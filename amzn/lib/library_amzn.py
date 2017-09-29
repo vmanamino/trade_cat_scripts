@@ -287,6 +287,13 @@ def get_item_attrs(elements, item_id):
 							else:
 								title = 'No Title element'
 							# return title, isbn
+					if not isbn:
+						isbn = 'bflux ISBN did not match'
+						if item_attrs.find('aws:Title', ns) is not None:
+							title = item_attrs.find('aws:Title', ns)
+							title = title.text	
+						else:
+							title = 'No Title element'
 				else:
 					isbn = 'No ISBNs to check'
 					title = 'No ISBNs to check'
