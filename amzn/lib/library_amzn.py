@@ -47,8 +47,10 @@ def collate_amzn_data(item_id, response_group): # add other attributes of amzn p
 	
 # under construction
 def parse_amzn_response(response, item_id, msg, response_group):
+	# need to set keys conditionally on response group
 	amzn_prod_dict = {}	
 	if response_group == 'ItemAttributes':
+		# everythin upt to if doc root find items, put in a separate function
 		if response != 'no response':		
 			if response.status == 200:			
 				doc = parse(response)			
@@ -60,15 +62,7 @@ def parse_amzn_response(response, item_id, msg, response_group):
 					# print(children)
 					title, isbn = get_item_attrs(children, item_id)
 					amzn_prod_dict['isbn'] = isbn
-					amzn_prod_dict['title_info'] = title
-						# if children.find('aws:Item', ns):														
-						# 	grandchildren = children.findall('aws:Item', ns)															
-						# 	title, isbn = get_item_attrs(grandchildren, item_id)
-						# 	amzn_prod_dict['isbn'] = isbn
-						# 	amzn_prod_dict['title_info'] = title
-						# else:
-						# 	amzn_prod_dict['isbn'] = 'No item element'
-						# 	amzn_prod_dict['title_info'] = 'No item element'		
+					amzn_prod_dict['title_info'] = title								
 				else:
 					amzn_prod_dict['isbn'] = 'No children of Items'
 					amzn_prod_dict['title_info'] = 'No children of Items'	
@@ -82,57 +76,88 @@ def parse_amzn_response(response, item_id, msg, response_group):
 	if response_group == 'OfferFull':
 		if response != 'no response':
 			if response.status == 200:
-				doc = parse(response)			
+				doc = parse(response)
 				doc_root = doc.getroot()
 				if doc_root.find('aws:Items', ns):
-					for child in doc_root.findall('aws:Items', ns):
-						if child.find('aws:Item', ns):														
-							for progeny in child.findall('aws:Item', ns):
-								if progeny.find('aws:Offers', ns):
-									for kid in progeny.findall('aws:Offers', ns):
-										if kid.find('aws:Offer', ns):
-											for grandkid in kid.findall('aws:Offer', ns):
-												if grandkid.find('aws:OfferListing', ns):
-													for proprogeny in grandkid.findall('aws:OfferListing', ns):
-														if proprogeny.find('aws:Price', ns):
-															for kind in proprogeny.findall('aws:Price', ns):
-																if kind.find('aws:FormattedPrice', ns) is not None:
-																	price = kind.find('aws:FormattedPrice', ns)
-																	amzn_prod_dict['price'] = price
-																else:
-																	amzn_prod_dict['price'] = 'no FormattedPrice element'	
-														else:
-															amzn_prod_dict['price'] = 'no Price element'
-														if proprogeny.find('aws:AvailabilityAttributes', ns):
-															for nino in proprogeny.findall('aws:AvailabilityAttributes', ns):
-																if nino.find('aws:AvailabilityType', ns) is not None:
-																	availability = nino.find('aws:AvailabilityType', ns)
-																	amzn_prod_dict['availability'] = availability
-																else:
-																	amzn_prod_dict['availability'] = 'no AvailabilityType element'
-														else:
-															amzn_prod_dict['availability'] = 'no AvailabilityAttributes element'																		
-												else:
-													amzn_prod_dict['price'] = 'no OfferListing element'
-													amzn_prod_dict['availability'] = 'no OfferListing element'
-										else:
-											amzn_prod_dict['price'] = 'no Offer element'
-											amzn_prod_dict['availability'] = 'no Offer element'
-								else:
-									amzn_prod_dict['price'] = 'no Offers element'
-									amzn_prod_dict['availability'] = 'no Offers element'
-						else:
-							amzn_prod_dict['price'] = 'no Items element'
-							amzn_prod_dict['availability'] = 'no Items element'
+					children = doc_root.find('aws:Items', ns)
+					print(children)
+					merchant, price, saved, availability = get_offer_listing(children, item_id)
+					amzn_prod_dict['merchant'] = merchant
+					amzn_prod_dict['price'] = price
+					amzn_prod_dict['amount_saved'] = saved
+					amzn_prod_dict['availability'] = availability
 				else:
-					amzn_prod_dict['price'] = 'no Items element'
-					amzn_prod_dict['availability'] = 'no Items element'
+					amzn_prod_dict['merchant'] = 'no children of Items'
+					amzn_prod_dict['price'] = 'no children of Items'
+					amzn_prod_dict['amount_saved'] = 'no children of Items'
+					amzn_prod_dict['availability'] = 'no children of Items'
 			else:
+				amzn_prod_dict['merchant'] = response.status
 				amzn_prod_dict['price'] = response.status
+				amzn_prod_dict['amount_saved'] = response.status
 				amzn_prod_dict['availability'] = response.status
+
 		else:
-			amzn_prod_dict['price'] = msg
-			amzn_prod_dict['availability'] = msg
+			amzn_prod_dict['merchant'] = msg
+			amzn_prod_dict['price']	= msg
+			amzn_prod_dict['amount_saved'] = msg
+			amzn_prod_dict['availability'] = msg	
+
+	# 	if response != 'no response':
+
+		# if response != 'no response':
+		# 	if response.status == 200:
+		# 		doc = parse(response)			
+		# 		doc_root = doc.getroot()
+		# 		if doc_root.find('aws:Items', ns):
+		# 			for child in doc_root.findall('aws:Items', ns):
+		# 				if child.find('aws:Item', ns):														
+		# 					for progeny in child.findall('aws:Item', ns):
+		# 						if progeny.find('aws:Offers', ns):
+		# 							for kid in progeny.findall('aws:Offers', ns):
+		# 								if kid.find('aws:Offer', ns):
+		# 									for grandkid in kid.findall('aws:Offer', ns):
+		# 										if grandkid.find('aws:OfferListing', ns):
+		# 											for proprogeny in grandkid.findall('aws:OfferListing', ns):
+		# 												if proprogeny.find('aws:Price', ns):
+		# 													for kind in proprogeny.findall('aws:Price', ns):
+		# 														if kind.find('aws:FormattedPrice', ns) is not None:
+		# 															price = kind.find('aws:FormattedPrice', ns)
+		# 															amzn_prod_dict['price'] = price
+		# 														else:
+		# 															amzn_prod_dict['price'] = 'no FormattedPrice element'	
+		# 												else:
+		# 													amzn_prod_dict['price'] = 'no Price element'
+		# 												if proprogeny.find('aws:AvailabilityAttributes', ns):
+		# 													for nino in proprogeny.findall('aws:AvailabilityAttributes', ns):
+		# 														if nino.find('aws:AvailabilityType', ns) is not None:
+		# 															availability = nino.find('aws:AvailabilityType', ns)
+		# 															amzn_prod_dict['availability'] = availability
+		# 														else:
+		# 															amzn_prod_dict['availability'] = 'no AvailabilityType element'
+		# 												else:
+		# 													amzn_prod_dict['availability'] = 'no AvailabilityAttributes element'																		
+		# 										else:
+		# 											amzn_prod_dict['price'] = 'no OfferListing element'
+		# 											amzn_prod_dict['availability'] = 'no OfferListing element'
+		# 								else:
+		# 									amzn_prod_dict['price'] = 'no Offer element'
+		# 									amzn_prod_dict['availability'] = 'no Offer element'
+		# 						else:
+		# 							amzn_prod_dict['price'] = 'no Offers element'
+		# 							amzn_prod_dict['availability'] = 'no Offers element'
+		# 				else:
+		# 					amzn_prod_dict['price'] = 'no Items element'
+		# 					amzn_prod_dict['availability'] = 'no Items element'
+		# 		else:
+		# 			amzn_prod_dict['price'] = 'no Items element'
+		# 			amzn_prod_dict['availability'] = 'no Items element'
+		# 	else:
+		# 		amzn_prod_dict['price'] = response.status
+		# 		amzn_prod_dict['availability'] = response.status
+		# else:
+		# 	amzn_prod_dict['price'] = msg
+		# 	amzn_prod_dict['availability'] = msg
 	return amzn_prod_dict
 
 # def parse_amzn_responses(data, item_id): 	
@@ -300,107 +325,100 @@ def get_item_attrs(elements, item_id):
 				# return title, isbn
 			else:
 				isbn = 'No ItemAttr elements'
-				title = 'No ItemAttr elements'
-				# return title, isbn
-		# if each.find('aws:Item', ns):
-			
-		# 	for each_item_child in each.findall('aws:Item', ns):							
-		# 		if each_item_child.find('aws:ItemAttributes', ns):									
-		# 			progeny = each_item_child.find('aws:ItemAttributes', ns)
-		# 			if progeny.find('aws:Binding', ns) is not None:
-		# 				binding = progeny.find('aws:Binding', ns)
-		# 				if binding.text == 'Gebundene Ausgabe': # language specific																	
-		# 					if progeny.find('aws:EAN', ns) is not None or progeny.find('aws:EISBN', ns) is not None:
-		# 						if progeny.find('aws:EAN', ns) is not None:																		
-		# 							isbn_to_check = progeny.find('aws:EAN', ns)					
-		# 							if isbn_to_check.text == item_id:				
-		# 								isbn = isbn_to_check.text						
-		# 								if progeny.find('aws:Title', ns) is not None:						
-		# 									title = progeny.find('aws:Title', ns)
-		# 									title = title.text								
-		# 								else:
-		# 									title = 'No Title element, but ISBN matches EAN'
-		# 								return title, isbn
-		# 							elif progeny.find('aws:EISBN', ns) is not None:		
-		# 								isbn_to_check = progeny.find('aws:EISBN', ns)
-		# 								if isbn_to_check.text == item_id:
-		# 									isbn = isbn_to_check.text
-		# 									if progeny.find('aws:Title', ns) is not None:
-		# 										title = progeny.find('aws:Title', ns)
-		# 										title = title.text							
-		# 									else:
-		# 										title = 'No Title element, but bflux ISBN matches EISBN'						
-		# 									return title, isbn
-		# 								else:
-		# 									isbn = 'bflux ISBN does not match EAN or EISBN'
-		# 									if progeny.find('aws:Title', ns) is not None:
-		# 										title = progeny.find('aws:Title', ns)
-		# 										title = title.text							
-		# 									else:
-		# 										title = 'No Title element'
-		# 									return title, isbn
-		# 							else:
-		# 								isbn = 'bflux ISBN does not match EAN, EISBN doees not exist'
-		# 								if progeny.find('aws:Title', ns) is not None:
-		# 									title = progeny.find('aws:Title', ns)
-		# 									title = title.text						
-		# 								else:
-		# 									title = 'No Title element, bflux ISBN does not match EAN, EISBN doees not exist'						
-		# 								return title, isbn				
-		# 						else: # progeny.find('aws:EISBN', ns) is not None:					
-		# 							isbn_to_check = progeny.find('aws:EISBN', ns)
-		# 							print('isbn to check', end=': ')
-		# 							print(isbn_to_check.text)
-		# 							print('bflux isbn', end=': ')
-		# 							print(item_id)
-		# 							if isbn_to_check.text == item_id:
-		# 								isbn = isbn_to_check.text
-		# 								if progeny.find('aws:Title', ns) is not None:
-		# 									title = progeny.find('aws:Title', ns)
-		# 									title = title.text							
-		# 								else:
-		# 									title = 'None'						
-		# 								return title, isbn
-		# 							else:
-		# 								isbn = 'No EAN, but EISBN present, but bflux ISBN does not match'
-		# 								if progeny.find('aws:Title', ns) is not None:
-		# 									title = progeny.find('aws:Title', ns)
-		# 									title = title.text							
-		# 								else:
-		# 									title = 'No EAN and No Title element, but EISBN present, but bflux ISBN does not match'
-		# 								return title, isbn
-		# 					else:
-		# 						isbn = 'No EAN, no EISBN'
-		# 						title = 'No EAN, no EISBN, cannot get to title element'
-		# 						return title, isbn
-		# 			else:
-		# 				isbn = 'No Binding Element, cannot get to EAN, EISBN'
-		# 				if progeny.find('aws:Title', ns) is not None:
-		# 					title = progeny.find('aws:Title', ns)
-		# 					title = title.text							
-		# 				else:
-		# 					title = 'No Binding element, no Title element, cannot get to EAN, EISBN'
-		# 					return title, isbn
-		# 		else:
-		# 			isbn = 'No Item Attributes element'
-		# 			title = 'No Item Attributes element'
-		# 			return title, isbn
-		# 	else:
-		# 		print('no item children for this isbn', end=': ')
-		# 		print(item_id)
-		# 		isbn = 'No Item children elements'
-		# 		title = 'No Item children elements'
-		# 		return title, isbn
-		# else:
-		# 	isbn = 'No Item element'
-		# 	title = 'No Item element'
-		# 	return title, isbn
+				title = 'No ItemAttr elements'				
 	else:
 		isbn = 'No Item elements'
 		title = 'No Item elements'
 	return title, isbn
 
-# async def amzn_request(url):
+def get_offer_listing(elements, item_id):
+	merchant = ''
+	price = ''
+	amount_saved = ''
+	availability = ''
+	if elements.findall('aws:Item', ns):
+		items = elements.findall('aws:Item', ns)
+		for item in items:
+			if item.find('aws:Offers', ns):
+				item_offers = item.find('aws:Offers', ns)
+				if item_offers.findall('aws:Offer', ns):
+					item_offer_children = item_offers.findall('aws:Offer', ns)
+					for each_offer_child in item_offer_children:
+						if each_offer_child.find('aws:Merchant', ns):
+							merchant_element = each_offer_child.find('aws:Merchant', ns)
+							if merchant_element.find('aws:Name', ns) is not None:
+								merchant_name = merchant_element.find('aws:Name', ns)
+								if merchant_name.text == 'Amazon.de': # too language specific, need to change
+									merchant = merchant_name.text
+									if each_offer_child.find('aws:OfferListing', ns):
+										offer_listing = each_offer_child.find('aws:OfferListing', ns)
+										if offer_listing.find('aws:Price', ns):
+											price_element = offer_listing.find('aws:Price', ns)
+											if price_element.find('aws:Amount', ns) is not None:
+												price_amount_elem = price_element.find('aws:Amount', ns)
+												price_int = int(price_amount_elem.text)/100
+												price = '%.2f' % price_int
+											else:
+												price = 'No Amount element in Price'
+										else:											
+											price = 'No Price element'											
+										if offer_listing.find('aws:AmountSaved', ns):
+											amountSaved = offer_listing.find('aws:AmountSaved', ns)
+											if amountSaved.find('aws:Amount', ns) is not None:
+												amount_saved_elem = amountSaved.find('aws:Amount', ns)
+												amount_saved_int = int(amount_saved_elem.text)/100
+												amount_saved = '%.2f' % amount_saved_int
+											else:
+												amount_saved = 'No Amount in AmountSaved'
+										else:
+											amount_saved = 'No AmountSaved element'
+										if offer_listing.find('aws:AvailabilityAttributes', ns):
+											availability_attrs_element = offer_listing.find('aws:AvailabilityAttributes', ns)
+											if availability_attrs_element.find('aws:AvailabilityType', ns) is not None:
+												availability = availability_attrs_element.find('aws:AvailabilityType', ns)
+												availability = availability.text
+											else:
+												availability = 'No AvailabilityType element'
+										else:
+											availability = 'No AvailabilityAttributes'
+									else:
+										# merchant = 'No OfferListing element'
+										price = 'No OfferListing element'
+										amount_saved = 'No OfferListing element'
+										availability = 'No OfferListing element'			
+							else:
+								merchant = 'No Merchant Name element'
+								price = 'No Merchant Name element'
+								amount_saved = 'No Merchant Name element'
+								availability = 'No Merchant Name element'	
+						else:
+							merchant = 'No Merchant element'
+							price = 'No Merchant element'
+							amount_saved = 'No Merchant element'
+							availability = 'No Merchant element'							
+					if merchant_name.text and merchant_name.text != 'Amazon.de':
+						merchant = 'Amazon.de not listed as merchant in any Offer'
+						price = 'No OfferListing element'
+						amount_saved = 'No OfferListing element'
+						availability = 'No OfferListing element'
+				else:
+					merchant = 'No Offer elements'
+					price = 'No Offer elements'
+					amount_saved = 'No Offer elements'
+					availability = 'No Offer elements'	
+			else:
+				merchant = 'No Offers element'
+				price = 'No Offers element'
+				amount_saved = 'No Offers element'
+				availability = 'No Offers element'		
+	else:
+		merchant = 'No Item elements'
+		price = 'No Item elements'
+		amount_saved = 'No Item elements'
+		availability = 'No Item elements'
+
+	return merchant, price, amount_saved, availability
+
 def amzn_request(url):
     request = urllib.request.Request(url)
     response = 'no response'
@@ -602,3 +620,6 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9783662494844', 'ItemAttributes'))
 # print(collate_amzn_data('9783642404061', 'ItemAttributes'))
 # print(get_amzn_url('9783642404061', 'ItemAttributes'))
+
+# print(get_amzn_url('9783662494844', 'OfferFull'))
+print(collate_amzn_data('9788847057661', 'OfferFull'))
