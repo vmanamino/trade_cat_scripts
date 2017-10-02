@@ -60,9 +60,9 @@ def parse_amzn_response(response, item_id, msg, response_group):
 					children = doc_root.find('aws:Items', ns)
 					print(children)
 					# print(children)
-					title, isbn = get_item_attrs(children, item_id)
+					title, isbn = get_item_attrs(children, item_id)					
 					amzn_prod_dict['isbn'] = isbn
-					amzn_prod_dict['title_info'] = title								
+					amzn_prod_dict['title_info'] = title												
 				else:
 					amzn_prod_dict['isbn'] = 'No children of Items'
 					amzn_prod_dict['title_info'] = 'No children of Items'	
@@ -297,35 +297,30 @@ def get_item_attrs(elements, item_id):
 				item_attrs = item.find('aws:ItemAttributes', ns)				
 				if item_attrs.find('aws:EISBN', ns) is not None:
 					eisbn = item_attrs.find('aws:EISBN', ns)
-					isbns_to_check.append(eisbn.text)
-				if item_attrs.find('aws:EAN', ns) is not None:
-					ean = item_attrs.find('aws:EAN', ns)
-					isbns_to_check.append(ean.text)
-				if isbns_to_check: # superfluous, could use for else statement, but makes parsing clearer
-					for each_isbn in isbns_to_check:
-						print(each_isbn)
-						if each_isbn == item_id:
-							isbn = each_isbn
-							if item_attrs.find('aws:Title', ns) is not None:
-								title = item_attrs.find('aws:Title', ns)
-								title = title.text	
-							else:
-								title = 'No Title element'
-							# return title, isbn
-					if not isbn:
-						isbn = 'bflux ISBN did not match'
+					if eisbn.text == item_id:
+						isbn = eisbn.text
 						if item_attrs.find('aws:Title', ns) is not None:
 							title = item_attrs.find('aws:Title', ns)
 							title = title.text	
 						else:
 							title = 'No Title element'
-				else:
-					isbn = 'No ISBNs to check'
-					title = 'No ISBNs to check'
-				# return title, isbn
+						break					
+				if item_attrs.find('aws:EAN', ns) is not None:
+					ean = item_attrs.find('aws:EAN', ns)
+					if ean.text == item_id:
+						isbn = ean.text
+						if item_attrs.find('aws:Title', ns) is not None:
+							title = item_attrs.find('aws:Title', ns)
+							title = title.text	
+						else:
+							title = 'No Title element'
+						break				
 			else:
-				isbn = 'No ItemAttr elements'
-				title = 'No ItemAttr elements'				
+				isbn = 'No match on Bflux ISBN and last or only item has No ItemAttr elements'
+				title = 'No match on Bflux ISBN and last or only item has No ItemAttr elements'	
+		if not isbn:
+			isbn = 'No match on Bflux ISBN in any item'
+			title = 'No match on Bflux ISBN in any item'			
 	else:
 		isbn = 'No Item elements'
 		title = 'No Item elements'
@@ -341,15 +336,20 @@ def get_offer_listing(elements, item_id):
 		for item in items:
 			if item.find('aws:Offers', ns):
 				item_offers = item.find('aws:Offers', ns)
-				if item_offers.findall('aws:Offer', ns):
+				if item_offers.findall('aws:Offer', ns):					
 					item_offer_children = item_offers.findall('aws:Offer', ns)
+					print('first condition hit')
+					print(len(item_offer_children))
 					for each_offer_child in item_offer_children:
+						print(each_offer_child)
 						if each_offer_child.find('aws:Merchant', ns):
 							merchant_element = each_offer_child.find('aws:Merchant', ns)
 							if merchant_element.find('aws:Name', ns) is not None:
 								merchant_name = merchant_element.find('aws:Name', ns)
 								if merchant_name.text == 'Amazon.de': # too language specific, need to change
 									merchant = merchant_name.text
+									print('merchant is ', end='')
+									print(merchant)
 									if each_offer_child.find('aws:OfferListing', ns):
 										offer_listing = each_offer_child.find('aws:OfferListing', ns)
 										if offer_listing.find('aws:Price', ns):
@@ -358,6 +358,8 @@ def get_offer_listing(elements, item_id):
 												price_amount_elem = price_element.find('aws:Amount', ns)
 												price_int = int(price_amount_elem.text)/100
 												price = '%.2f' % price_int
+												print('price element is ', end='')
+												print(price)
 											else:
 												price = 'No Amount element in Price'
 										else:											
@@ -368,6 +370,8 @@ def get_offer_listing(elements, item_id):
 												amount_saved_elem = amountSaved.find('aws:Amount', ns)
 												amount_saved_int = int(amount_saved_elem.text)/100
 												amount_saved = '%.2f' % amount_saved_int
+												print('amount saved is ', end='')
+												print(amount_saved)
 											else:
 												amount_saved = 'No Amount in AmountSaved'
 										else:
@@ -385,38 +389,46 @@ def get_offer_listing(elements, item_id):
 										# merchant = 'No OfferListing element'
 										price = 'No OfferListing element'
 										amount_saved = 'No OfferListing element'
-										availability = 'No OfferListing element'			
+										availability = 'No OfferListing element'									
 							else:
 								merchant = 'No Merchant Name element'
 								price = 'No Merchant Name element'
 								amount_saved = 'No Merchant Name element'
-								availability = 'No Merchant Name element'	
+								availability = 'No Merchant Name element'									
 						else:
 							merchant = 'No Merchant element'
 							price = 'No Merchant element'
 							amount_saved = 'No Merchant element'
 							availability = 'No Merchant element'							
-					if merchant_name.text and merchant_name.text != 'Amazon.de':
-						merchant = 'Amazon.de not listed as merchant in any Offer'
-						price = 'No OfferListing element'
-						amount_saved = 'No OfferListing element'
-						availability = 'No OfferListing element'
+
+					# if merchant_name.text and merchant_name.text != 'Amazon.de':
+					# 	merchant = 'Amazon.de not listed as merchant in any Offer element'
+					# 	price = 'No OfferListing element'
+					# 	amount_saved = 'No OfferListing element'
+					# 	availability = 'No OfferListing element'						
 				else:
 					merchant = 'No Offer elements'
 					price = 'No Offer elements'
 					amount_saved = 'No Offer elements'
-					availability = 'No Offer elements'	
+					availability = 'No Offer elements'					
 			else:
 				merchant = 'No Offers element'
 				price = 'No Offers element'
 				amount_saved = 'No Offers element'
-				availability = 'No Offers element'		
+				availability = 'No Offers element'
+			if merchant == 'Amazon.de':
+				break	
+		if merchant != 'Amazon.de':
+			merchant = 'Amazon.de not listed as merchant in any Item element'
+			price = 'Amazon.de not listed as merchant in any Item element'
+			amount_saved = 'Amazon.de not listed as merchant in any Item element'
+			availability = 'Amazon.de not listed as merchant in any Item element'
+
 	else:
 		merchant = 'No Item elements'
 		price = 'No Item elements'
 		amount_saved = 'No Item elements'
-		availability = 'No Item elements'
-
+		availability = 'No Item elements'	
 	return merchant, price, amount_saved, availability
 
 def amzn_request(url):
@@ -622,4 +634,10 @@ def create_autographed_url(s_to_send, signature_param_value):
 # print(get_amzn_url('9783642404061', 'ItemAttributes'))
 
 # print(get_amzn_url('9783662494844', 'OfferFull'))
-print(collate_amzn_data('9788847057661', 'OfferFull'))
+# print(collate_amzn_data('9788847057661', 'OfferFull'))
+
+# print(get_amzn_url('9783662489918', 'OfferFull'))
+# print(collate_amzn_data('9783662489918', 'OfferFull'))
+
+# print(get_amzn_url('9783662489918', 'ItemAttributes'))
+# print(collate_amzn_data('9783662487860', 'ItemAttributes'))

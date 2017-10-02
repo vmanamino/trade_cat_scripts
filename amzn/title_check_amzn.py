@@ -26,7 +26,7 @@ option = sys.argv[4]
 
 # responseGroups = {'title_info': 'ItemAttributes', 'cover_info': 'Images', 'sales_info': 'OfferFull'}
 
-responseGroups = {'title_info': 'ItemAttributes'}
+responseGroups = {'title_info': 'ItemAttributes', 'sales_info': 'OfferFull'}
 
 filename = medium + '_' + promotion + '_' + year + '.xlsx'
 print(filename)
@@ -76,16 +76,17 @@ elif option == 'spreadsheet':
 		count = data.max_row
 		print(count)
 		# range is to, not including the upper limit
-		count = count + 1
+		# count = count + 1
+		count = 52
 		if response_group == 'ItemAttributes':
 			isbn_check = buk.active
-			isbn_check.title = 'ISBN Check'
+			isbn_check.title = report
 			isbn_check.cell(row=1, column=1, value="BFLUX ISBN")
 			isbn_check.cell(row=1, column=2, value="BFLUX Title")
 			isbn_check.cell(row=1, column=3, value="AMZN DE ISBN")
 			isbn_check.cell(row=1, column=4, value="AMZN DE Title")
 			isbn_check.cell(row=1, column=5, value="Match")
-			for n in range(2, 10002):
+			for n in range(2, count):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
@@ -110,9 +111,11 @@ elif option == 'spreadsheet':
 			sales_info.cell(row=1, column=2, value="BFLUX Title")
 			sales_info.cell(row=1, column=3, value="BFLUX Price")
 			sales_info.cell(row=1, column=4, value="AMZN DE Price")
-			sales_info.cell(row=1, column=5, value="BFLUX Availabity")
-			sales_info.cell(row=1, column=6, value="AMZN DE Availability")
-			for n in range(2, 10002):
+			sales_info.cell(row=1, column=5, value="AMZN DE Saved")
+			sales_info.cell(row=1, column=6, value="AMZN DE Merchant")
+			sales_info.cell(row=1, column=7, value="BFLUX Availabity")
+			sales_info.cell(row=1, column=8, value="AMZN DE Availability")
+			for n in range(2, count):
 				time.sleep(1)
 				log_count += 1
 				log_date = time.strftime("%d:%m:%y")
@@ -127,8 +130,10 @@ elif option == 'spreadsheet':
 				sales_info.cell(row=n, column=2, value=item.title)
 				sales_info.cell(row=n, column=3, value=item.price_DE)
 				sales_info.cell(row=n, column=4, value=product_data['price'])
-				sales_info.cell(row=n, column=5, value=item.del_status)
-				sales_info.cell(row=n, column=6, value=product_data['availability'])			
+				sales_info.cell(row=n, column=5, value=product_data['amount_saved'])
+				sales_info.cell(row=n, column=6, value=product_data['merchant'])
+				sales_info.cell(row=n, column=7, value=item.del_status)
+				sales_info.cell(row=n, column=8, value=product_data['availability'])			
 
 	print_date = time.strftime("%d%m%y")
 	print_time = time.strftime("%I%M%S")
