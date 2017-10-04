@@ -77,7 +77,7 @@ elif option == 'spreadsheet':
 		print(count)
 		# range is to, not including the upper limit
 		# count = count + 1
-		count = 52
+		count = 10002
 		if response_group == 'ItemAttributes':
 			isbn_check = buk.active
 			isbn_check.title = report
